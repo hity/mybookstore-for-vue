@@ -1,0 +1,30 @@
+$designWidth: 750;
+$mainColor: #bb99b8;
+$normalTxtColor: #666;
+$normalBorderColor: #ececec;
+$oprColor: #1890ff;
+@function px2rem( $px  ){
+    @return $px*320/$designWidth/20 + rem;
+}
+
+body {
+    background: #f8f8f8;
+    font-size: px2rem(24);
+}
+p {
+    margin: 0;
+}
+
+.ant-layout-footer {
+    position: fixed;
+    bottom: 0;
+    border-top: 1px solid $normalBorderColor;
+    left: 0;
+    width: 100%;
+    padding: 0;
+    background: #fff;
+}
+
+.ant-input {
+    font-size: px2rem(24);
+}

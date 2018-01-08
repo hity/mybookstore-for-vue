@@ -1,0 +1,26 @@
+@import 'src/style/style.scss';
+
+.plan-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    height: px2rem(80);
+    line-height: px2rem(80);
+    color: $normalTxtColor;
+    background-color: #fff;
+}
+
+.plan-ct {
+    margin-top: px2rem(90);
+    & > * {
+        padding: px2rem(24);
+        background: #fff;
+    }
+    .plan-ct__add {
+        text-align: right;
+        color: $oprColor;
+        margin-bottom: px2rem(2);
+    }
+}

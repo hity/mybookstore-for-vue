@@ -1,0 +1,10 @@
+@import 'src/style/style.scss';
+
+.search-selector {
+    margin-top: px2rem(2);
+    padding: px2rem(24);
+    background-color: #fff;
+    a {
+        color: $normalTxtColor;
+    }
+}
