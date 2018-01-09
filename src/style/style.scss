@@ -7,6 +7,21 @@ $oprColor: #1890ff;
     @return $px*320/$designWidth/20 + rem;
 }
 
+@mixin nLineLimit($n) {
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-word-break: break-all;
+    box-orient: vertical;
+    -webkit-box-orient: vertical;
+    line-clamp: $n;
+    -webkit-line-clamp: $n;
+}
+
 body {
     background: #f8f8f8;
     font-size: px2rem(24);

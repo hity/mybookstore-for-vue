@@ -1,47 +1,33 @@
 // reducer.js
-import { ADD_TODO, DEL_ITEM, SWITCH_STATUS, SET_FILTER_TYPE } from './actionTypes.js'
+import { FILTER_DOUBAN } from './actionTypes.js'
 
-export default ({list, filterType} = {list: [], filterType: 'all'}, action) => {
+export default (status, action) => {
     switch (action.type) {
-        case ADD_TODO:
+        case FILTER_DOUBAN:
+            console.log('books', status, action)
             return {
-                list: [{
-                    id: action.id,
-                    text: action.text,
-                    completed: false
-                }, ...list],
-                filterType
-            }
-        case DEL_ITEM:
-            return {
-                list: list.filter((item) => {
-                    return item.id != action.id
-                }),
-                filterType
-            }
-        case SWITCH_STATUS:
-            return {
-                list: list.map((item) => {
-                    if (item.id == action.id) {
-                        return {
-                            ...item,
-                            completed: !item.completed
-                        }
-                    } else {
-                        return item
-                    }
-                }),
-                filterType
-            }
-        case SET_FILTER_TYPE:
-            return {
-                list,
-                filterType: action.filterType
+                books: action.books.map(item => {
+                    delete item.rating
+                    delete item.tags
+                    delete item.origin_title
+                    delete item.image
+                    delete item.catalog
+                    delete item['ebook_url']
+                    delete item.alt
+                    delete item.id
+                    delete item.url
+                    delete item['alt_title']
+                    delete item['author_intro']
+                    delete item['ebook_price']
+                    item.author = item.author.join(', ')
+                    item.isbn = item.isbn13 ? item.isbn13 : item.isbn10
+                    item.title = item.title ? item.title : item.subtitle
+                    return item
+                })
             }
         default:
             return {
-                list,
-                filterType
+                books: []
             }
     }
 }

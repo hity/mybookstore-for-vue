@@ -44,12 +44,20 @@ const getTrendsPage = (location, callback) => {
     }, 'trends')
 }
 
+const getBookDetail = (location, callback) => {
+    require.ensure([], (require) => {
+        document.title = '创建书本'
+        callback(null, require('./pages/createbook/detail').default)
+    }, 'createbook')
+}
+
 const Routes = () => (
     <Router history={browserHistory}>
         <Route path="/" component={App}>
             <IndexRoute name="home" getComponent={getHomePage}/>
             <Route path="/home" name="home" getComponent={getHomePage}></Route>
             <Route path="/createbook" name="createBook" getComponent={getCreateBookPage}></Route>
+            <Route path="/createbook/:isbn" name="createDetail" getComponent={getBookDetail}></Route>
             <Route path="/msgboard" name="msgboard" getComponent={getMsgboardPage}></Route>
             <Route path="/plan" name="plan" getComponent={getPlanPage}></Route>
             <Route path="/trends" name="trends" getComponent={getTrendsPage}></Route>

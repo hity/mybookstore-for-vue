@@ -1,26 +1,44 @@
 // toolbar
 import React from 'react'
-import { Row, Col } from 'antd'
+import { Row, Col, Icon } from 'antd'
 import './index.scss'
-export default class Bookitem extends React.Component {
+import { browserHistory } from 'react-router'
+
+export default class BookDetail extends React.Component {
     render() {
+        let {
+            logo,
+            title,
+            author,
+            readDate,
+            isbn,
+            pos,
+            type
+        } = this.props
         return (
             <Row className="bookitem" type="flex" align="middle">
-                <Col>
-                    <img src="javascript:void(0)" />
+                <Col className="img-frame">
+                    <img src={logo} />
                 </Col>
                 <Col className="desc">
-                    <p className="desc-name">全集02：撒哈拉的故事</p>
-                    <p className="desc-author">三毛</p>
-                    <p className="desc-date">2017-01-02</p>
-                    <p className="desc-isbn">ISBN：1244234243242324</p>
-                    <p className="desc-pos">一楼书房A架1层</p>
+                    {title ? <p className="desc-name">{title}</p> : null}
+                    {author ? <p className="desc-author">作者: {author}</p> : null}
+                    {readDate ? <p className="desc-date">完成阅读: {readDate}</p> : null}
+                    {isbn ? <p className="desc-isbn">ISBN: {isbn}</p> : null}
+                    {pos ? <p className="desc-pos">{pos}</p> : null}
                 </Col>
                 <Col className="opr">
-                    <p>加入藏书</p>
-                    <p>加入想读</p>
-                    <p>加入想买</p>
-                    <p>加入已读</p>
+                    {type === 'createBook' ? <Icon type="right" onClick={() => {
+                        console.log('cick')
+                        browserHistory.push('/createbook/' + isbn)
+                    }}/> :
+                        <div>
+                            <p>加入藏书</p>
+                            <p>加入想读</p>
+                            <p>加入想买</p>
+                            <p>加入已读</p>
+                        </div>
+                    }
                 </Col>
             </Row>
         )
