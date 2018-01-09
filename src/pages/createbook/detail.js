@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import BookDetail from 'src/components/bookDetail/index'
+import './detail.scss'
 
 class Detail extends Component {
     render() {
@@ -20,13 +21,5 @@ const mapStateToProps = (state, ownProps) => {
         })[0]
     }
 }
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         getDetail: (isbn) => {
-//             dispatch(filterDouban(data && data.books))
-//         }
-//     }
-// }
 
 export default connect(mapStateToProps, null)(Detail)

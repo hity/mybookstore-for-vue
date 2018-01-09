@@ -1,13 +1,51 @@
 @import 'src/style/style.scss';
-.img-frame {
-    width: px2rem(180);
-    height: px2rem(180);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    img {
-        display: block;
-        max-width: px2rem(180);
-        max-height: px2rem(180);
+
+.book-detail {
+    padding: px2rem(24) px2rem(24) px2rem(124);
+    background: #fff;
+}
+
+.book-detail-title {
+    font-size: px2rem(40);
+    line-height: 150%;
+    margin-bottom: px2rem(20);
+    color: #111;
+}
+
+.book-detail-info {
+    margin: px2rem(20);
+    font-size: px2rem(26);
+    .img-frame {
+        width: px2rem(200);
+        height: px2rem(200);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+
+    .book-info__desc {
+        width: px2rem(440);
+    }
+}
+
+.book-detail-opr {
+    margin-top: px2rem(30);
+    font-size: px2rem(26);
+    line-height: px2rem(58);
+    & > div {
+        margin-left: px2rem(20);
+    }
+    .large-gap {
+        margin: px2rem(20) 0;
+    }
+    em {
+        display: inline-block;
+        width: 22%;
+        text-align: right;
     }
 }

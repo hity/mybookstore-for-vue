@@ -1,7 +1,6 @@
 import React from 'react'
 import { Row, Col, DatePicker } from 'antd'
 import './index.scss'
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker
 
 function onChange(date, dateString) {
     console.log(date, dateString)

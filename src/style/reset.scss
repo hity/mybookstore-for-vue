@@ -1,0 +1,29 @@
+@import 'src/style/style.scss';
+body {
+    background: #f8f8f8;
+    font-size: px2rem(24);
+}
+p {
+    margin: 0;
+}
+em {
+    font-weight: bold;
+    font-style: normal;
+}
+.ant-layout-footer {
+    position: fixed;
+    bottom: 0;
+    border-top: 1px solid $normalBorderColor;
+    left: 0;
+    width: 100%;
+    padding: 0;
+    background: #fff;
+}
+
+.ant-input {
+    font-size: px2rem(24);
+}
+
+.ant-collapse > .ant-collapse-item {
+    border: none!important;
+}
