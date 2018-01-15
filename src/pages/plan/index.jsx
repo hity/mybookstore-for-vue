@@ -8,7 +8,7 @@ const tabList = [{
     tab: '购书单'
 }, {
     key: 'tab2',
-    tab: '想读书单'
+    tab: '想读'
 }, {
     key: 'tab3',
     tab: '读书计划'

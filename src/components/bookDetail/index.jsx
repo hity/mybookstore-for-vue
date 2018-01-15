@@ -51,19 +51,21 @@ export default class BookDetail extends React.Component {
         return (
             <div className="book-detail">
                 <p className="book-detail-title">{title}</p>
-                <Row className="book-detail-info" type="flex" align="middle">
-                    <Col className="book-info__desc">
-                        <p>{author + ' / ' + translator + ' / ' + publisher + ' / ' + pages + '页 / ' + binding + ' / ' + price + ' / ' + pubdate}</p>
-                    </Col>
-                    <Col className="img-frame">
-                        <img src={medium} />
-                    </Col>
-                </Row>
-                {summary ? <Collapse bordered={false} defaultActiveKey={['1']}>
-                    <Collapse.Panel header="内容简介">
-                        <p>{summary}</p>
-                    </Collapse.Panel>
-                </Collapse> : null}
+                <div className="book-detail-info">
+                    <Row type="flex" align="middle">
+                        <Col className="book-info__desc">
+                            <p>{author + ' / ' + translator + ' / ' + publisher + ' / ' + pages + '页 / ' + binding + ' / ' + price + ' / ' + pubdate}</p>
+                        </Col>
+                        <Col className="img-frame">
+                            <img src={medium} />
+                        </Col>
+                    </Row>
+                    {summary ? <Collapse bordered={false} defaultActiveKey={['1']}>
+                        <Collapse.Panel header="内容简介">
+                            <p>{summary}</p>
+                        </Collapse.Panel>
+                    </Collapse> : null}
+                </div>
                 <div className="book-detail-opr">
                     <div className="book-detail-pos large-gap">
                         <em>藏书位置：</em>
@@ -105,7 +107,7 @@ export default class BookDetail extends React.Component {
                         <em>购书日期：</em>
                         <DatePicker onChange={onChange} placeholder={'2018-01-02'}/>
                     </div>
-                    <p><Checkbox value="a" defaultChecked={isMine}>藏书</Checkbox></p>
+                    <p><Checkbox value="a" defaultChecked={isMine}>已有藏书</Checkbox></p>
                     <p><Checkbox value="d" defaultChecked={isRead}>已读</Checkbox></p>
                     <p><Checkbox value="b" defaultChecked={isWantedToBuy}>想买</Checkbox></p>
                     <p><Checkbox value="c" defaultChecked={isWantedToRead}>想读</Checkbox></p>

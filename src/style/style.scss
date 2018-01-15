@@ -2,6 +2,7 @@ $designWidth: 750;
 $mainColor: #bb99b8;
 $normalTxtColor: #666;
 $normalBorderColor: #ececec;
+$gapColor: #f8f8f8;
 $oprColor: #1890ff;
 @function px2rem( $px  ){
     @return $px*320/$designWidth/20 + rem;

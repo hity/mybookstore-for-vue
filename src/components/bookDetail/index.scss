@@ -8,13 +8,15 @@
 .book-detail-title {
     font-size: px2rem(40);
     line-height: 150%;
-    margin-bottom: px2rem(20);
+    padding-bottom: px2rem(20);
     color: #111;
+    border-bottom: 1px solid $normalBorderColor;
 }
 
 .book-detail-info {
     margin: px2rem(20);
     font-size: px2rem(26);
+    border-bottom: 1px solid $normalBorderColor;
     .img-frame {
         width: px2rem(200);
         height: px2rem(200);

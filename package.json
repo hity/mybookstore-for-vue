@@ -90,8 +90,5 @@
   },
   "dependencies": {
     "echarts": "^3.7.2"
-  },
-  "theme": {
-    "primary-color": "red",
-    }
+  }
 }

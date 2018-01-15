@@ -1,7 +1,7 @@
 var webpack = require('webpack')
-var path = require('path') 
-var config = require('../config') 
-var utils = require('./utils') 
+var path = require('path')
+var config = require('../config')
+var utils = require('./utils')
 var autoprefixer = require('autoprefixer')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
@@ -29,7 +29,7 @@ module.exports = {
             loader: 'babel-loader',
             include: [utils.resolvePath('../src')],
             options:{
-                presets: ['env']                
+                presets: ['env']
             }
         }, {
             test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
