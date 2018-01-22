@@ -82,6 +82,6 @@ module.exports = {
     },
     settings: {
         "import/resolver": "webpack",
-        "import/extensions": [".jsx", ".js"]
+        "import/extensions": [".js", ".jsx"]
     },
 };

@@ -2,12 +2,6 @@
 import React from 'react'
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import App from './pages/app'
-const getTodoApp = (location, callback) => {
-    require.ensure([], (require) => {
-        document.title = 'todoList'
-        callback(null, require('./pages/todo/index').default)
-    }, 'todoList')
-}
 
 const getHomePage = (location, callback) => {
     require.ensure([], (require) => {
@@ -61,7 +55,6 @@ const Routes = () => (
             <Route path="/msgboard" name="msgboard" getComponent={getMsgboardPage}></Route>
             <Route path="/plan" name="plan" getComponent={getPlanPage}></Route>
             <Route path="/trends" name="trends" getComponent={getTrendsPage}></Route>
-            <Route path="/todo" name="todoList" getComponent={getTodoApp}></Route>
         </Route>
     </Router>
 )
