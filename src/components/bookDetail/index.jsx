@@ -1,7 +1,8 @@
 // bookitem
 import React from 'react'
-import { Row, Col, Icon, Collapse, Select, Checkbox, InputNumber, DatePicker, Button } from 'antd'
+import { Row, Col, Icon, Collapse, Select, Checkbox, InputNumber, DatePicker, Button, Radio } from 'antd'
 import './index.scss'
+const RadioGroup = Radio.Group
 
 function handleChange(value) {
     console.log(`selected ${value}`)
@@ -19,8 +20,30 @@ function onChange() {
 
 }
 export default class BookDetail extends React.Component {
-    open() {
+    constructor(props, context) {
+        super(props, context)
 
+        this.onChange1 = this.onChange1.bind(this)
+        this.onChange2 = this.onChange2.bind(this)
+
+        this.state = {
+            value1: '已有藏书',
+            value2: '想读'
+        }
+    }
+
+    onChange1(e) {
+        console.log('radio1 checked', this)
+        this.setState({
+            value1: e.target.value
+        })
+    }
+
+    onChange2(e) {
+        console.log('radio2 checked', this)
+        this.setState({
+            value2: e.target.value
+        })
     }
     render() {
         let {
@@ -35,11 +58,11 @@ export default class BookDetail extends React.Component {
             pages,
             binding,
             summary,
-            isWantedToRead,
-            isMine,
-            isRead,
-            isWantedToBuy,
-            isPrivate
+            isWantedToRead, // 想读
+            isMine, // 已有藏书
+            isRead, // 已读
+            isWantedToBuy, // 想买
+            isPrivate // 是否公开
         } = this.props.book ? this.props.book : {}
         let tags = this.props.tags || [1, 2, 3]
         let pos = this.props.pos || {list: [1, 2, 3], defaultPos: '书架'}
@@ -107,10 +130,12 @@ export default class BookDetail extends React.Component {
                         <em>购书日期：</em>
                         <DatePicker onChange={onChange} placeholder={'2018-01-02'}/>
                     </div>
-                    <p><Checkbox value="a" defaultChecked={isMine}>已有藏书</Checkbox></p>
-                    <p><Checkbox value="d" defaultChecked={isRead}>已读</Checkbox></p>
-                    <p><Checkbox value="b" defaultChecked={isWantedToBuy}>想买</Checkbox></p>
-                    <p><Checkbox value="c" defaultChecked={isWantedToRead}>想读</Checkbox></p>
+                    <div>
+                        <RadioGroup options={['已有藏书', '想买']} onChange={this.onChange1} value={this.state.value1} />
+                    </div>
+                    <div>
+                        <RadioGroup options={['已读', '想读']} onChange={this.onChange2} value={this.state.value2} />
+                    </div>
                     <p><Checkbox value="a" defaultChecked={!isPrivate}>是否公开</Checkbox></p>
                 </div>
                 <div style={{textAlign: 'center'}}><Button type="primary">放入书库</Button></div>
