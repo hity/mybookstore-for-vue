@@ -8,7 +8,6 @@ export default (status, action) => {
             return {
                 books: action.books.map(item => {
                     delete item.rating
-                    delete item.tags
                     delete item.origin_title
                     delete item.image
                     delete item.catalog

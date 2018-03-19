@@ -7,11 +7,8 @@ export default class Searchbar extends React.Component {
     render() {
         return (
             <Row className = "searchbar">
-                <Col span={14}>
+                <Col span={24}>
                     <Search placeholder="请输入书名、ISBN号、作者" onSearch={(value) => this.props.searchCb(value)} />
-                </Col>
-                <Col span={4} offset={1}>
-                    <Button>搜索</Button>
                 </Col>
             </Row>
         )
