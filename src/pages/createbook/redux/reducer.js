@@ -7,6 +7,9 @@ export default (status, action) => {
             console.log('books', status, action)
             return {
                 books: action.books.map(item => {
+                    item.author = item.author.join(', ')
+                    item.isbn = !item.isbn ? (!item.isbn13 ? item.isbn10 : item.isbn13) : item.isbn
+                    item.title = !item.title ? item.subtitle : item.title
                     delete item.rating
                     delete item.origin_title
                     delete item.image
@@ -18,9 +21,10 @@ export default (status, action) => {
                     delete item['alt_title']
                     delete item['author_intro']
                     delete item['ebook_price']
-                    item.author = item.author.join(', ')
-                    item.isbn = item.isbn13 ? item.isbn13 : item.isbn10
-                    item.title = item.title ? item.title : item.subtitle
+                    delete item.isbn13
+                    delete item.isbn10
+                    delete item.subtitle
+
                     return item
                 })
             }

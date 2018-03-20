@@ -3,41 +3,61 @@ import React from 'react'
 import { Row, Col, Icon, Collapse, Select, Checkbox, InputNumber, DatePicker, Button, Radio } from 'antd'
 import './index.scss'
 import moment from 'moment'
+import { addBook } from '../../api/index'
+import { browserHistory } from 'react-router'
 const RadioGroup = Radio.Group
 
-function handleChange(value) {
-    console.log(`selected ${value}`)
-}
-
-function handleBlur() {
-    console.log('blur')
-}
-
-function handleFocus() {
-    console.log('focus')
-}
-
-function onChange() {
-
-}
 export default class BookDetail extends React.Component {
     constructor(props, context) {
         super(props, context)
 
-        this.onChange1 = this.onChange1.bind(this)
-        this.onChange2 = this.onChange2.bind(this)
-        this.onPosChange = this.onPosChange.bind(this)
+        this.onChangeCategory = this.onChangeCategory.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.onChangePos = this.onChangePos.bind(this)
+        this.onChangeTag = this.onChangeTag.bind(this)
+        this.onChangePrice = this.onChangePrice.bind(this)
+        this.onChangePossessTime = this.onChangePossessTime.bind(this)
+        this.onChangeStockState = this.onChangeStockState.bind(this)
+        this.onChangeReadState = this.onChangeReadState.bind(this)
+        this.onChangePrivate = this.onChangePrivate.bind(this)
 
         this.state = Object.assign(
             this.handleData(this.props)
         )
-        console.log('state', this.state)
     }
     onSubmit() {
+        let {
+            title,
+            category,
+            tag,
+            pos,
+            stockState,
+            readState,
+            possessTime
+        } = this.state
 
+        let data = Object.assign({}, this.state, {
+            name: title,
+            category: category.value,
+            tag: tag.value,
+            pos: pos.value,
+            isWantedToBuy: stockState === '想买',
+            isMine: stockState === '藏书',
+            isWantedToRead: readState === '想读',
+            isRead: readState === '已读',
+            possessTime: new Date(possessTime).toLocaleDateString()
+        })
+        delete data.stockState
+        delete data.readState
+        delete data.price
+        delete data.summary
+        delete data.binding
+
+        addBook(data).then(({success}) => {
+            success && browserHistory.push('/home')
+        })
     }
-    handleData({book = {}, categories = [], tag = [], pos = []}) {
+    handleData({book = {}, categories = [{}], tag = [{}], pos = [{}]}) {
         // 分类数据处理
         book && book.tags && book.tags.length && book.tags.forEach(i => categories.unshift(i.name))
         delete book.tags
@@ -49,13 +69,13 @@ export default class BookDetail extends React.Component {
         // 标签
         book.tag = {
             list: tag,
-            value: tag[0].name
+            value: tag.length ? tag[0].name : []
         }
 
         // 位置
         book.pos = {
             list: pos,
-            value: pos[0].name
+            value: pos.length ? pos[0].name : ''
         }
 
         // logo处理
@@ -77,28 +97,56 @@ export default class BookDetail extends React.Component {
 
         return book || {}
     }
-    onChange1(e) {
+    onChangeCategory(e) {
+        let category = Object.assign(this.state.category, {
+            value: e
+        })
         this.setState({
-            value1: e.target.value
+            category
         })
     }
-
-    onChange2(e) {
+    onChangePos(e) {
+        let pos = Object.assign(this.state.pos, {
+            value: e
+        })
         this.setState({
-            value2: e.target.value
+            pos
         })
     }
-
-    onPosChange(e) {
-        console.log('e0', e)
+    onChangeTag(e) {
+        let tag = Object.assign(this.state.tag, {
+            value: e
+        })
+        this.setState({
+            tag
+        })
     }
-
-    onPriceChange(e) {
-        console.log('price', e)
+    onChangePrice(e) {
+        this.setState({
+            realPrice: e
+        })
     }
-
+    onChangePossessTime(e) {
+        this.setState({
+            possessTime: new Date(e).toLocaleDateString()
+        })
+    }
+    onChangeStockState(e) {
+        this.setState({
+            stockState: e.target.value
+        })
+    }
+    onChangeReadState(e) {
+        this.setState({
+            readState: e.target.value
+        })
+    }
+    onChangePrivate(e) {
+        this.setState({
+            isPrivate: e.target.checked
+        })
+    }
     render() {
-        console.log('here', this.state)
         let {
             title,
             author,
@@ -118,6 +166,7 @@ export default class BookDetail extends React.Component {
             readState,
             isPrivate
         } = this.state
+
         let renderIntro = [author, translator, publisher, !pages ? '' : pages + '页', !price ? '' : price + '元', pubdate].filter(i => Boolean(i)).join(' / ')
         return (
             <div className="book-detail">
@@ -149,6 +198,7 @@ export default class BookDetail extends React.Component {
                             defaultValue={category.value}
                             placeholder="选择/输入分类"
                             style={{width: 200}}
+                            onChange={this.onChangeCategory}
                         >
                             {
                                 category.list.map(i => {
@@ -165,10 +215,11 @@ export default class BookDetail extends React.Component {
                             defaultValue={pos.value}
                             placeholder="选择/输入分类"
                             style={{width: 200}}
+                            onChange={this.onChangePos}
                         >
                             {
                                 pos.list.map(i => {
-                                    return <Select.Option key={i._id}>{i.name}</Select.Option>
+                                    return <Select.Option key={!i.name ? i : i.name}>{!i.name ? '' : i.name}</Select.Option>
                                 })
                             }
                         </Select>
@@ -181,10 +232,10 @@ export default class BookDetail extends React.Component {
                             style={{ width: '50%' }}
                             placeholder="选择/输入标签"
                             defaultValue={tag.value}
-                            onChange={handleChange}
+                            onChange={this.onChangeTag}
                         >
                             {tag.list.map((i) => {
-                                return <Select.Option key={i._id}>{i.name}</Select.Option>
+                                return <Select.Option key={!i.name ? i : i.name}>{!i.name ? '' : i.name}</Select.Option>
                             })}
                         </Select>
                     </div>
@@ -195,22 +246,22 @@ export default class BookDetail extends React.Component {
                             precision={2}
                             placeholder="0.00"
                             value={realPrice}
-                            onChange={this.priceChange}
+                            onChange={this.onChangePrice}
                         /> 元
                     </div>
                     <div className="large-gap">
                         <em>购书日期：</em>
-                        <DatePicker onChange={onChange} defaultValue={moment(possessTime)} format="YYYY-MM-DD"/>
+                        <DatePicker onChange={this.onChangePossessTime} defaultValue={moment(possessTime)} format="YYYY/MM/DD"/>
                     </div>
                     <div>
-                        <RadioGroup options={['已有藏书', '想买', '其他']} onChange={this.onChange1} value={stockState} />
+                        <RadioGroup options={['已有藏书', '想买', '其他']} onChange={this.onChangeStockState} value={stockState} />
                     </div>
                     <div>
-                        <RadioGroup options={['已读', '想读', '其他']} onChange={this.onChange2} value={readState} />
+                        <RadioGroup options={['已读', '想读', '其他']} onChange={this.onChangeReadState} value={readState} />
                     </div>
-                    <p><Checkbox value="a" defaultChecked={!isPrivate}>是否公开</Checkbox></p>
+                    <p><Checkbox value="a" defaultChecked={!isPrivate} onChange={this.onChangePrivate}>是否公开</Checkbox></p>
                 </div>
-                <div style={{textAlign: 'center'}}><Button type="primary" onClick={this.submit}>放入书库</Button></div>
+                <div style={{textAlign: 'center'}}><Button type="primary" onClick={this.onSubmit}>放入书库</Button></div>
             </div>
         )
     }

@@ -6,7 +6,7 @@ import logger from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
-import db from './db.js';
+import db from './models/db.js';
 import routes from './routes/index';
 import http from 'http';
 

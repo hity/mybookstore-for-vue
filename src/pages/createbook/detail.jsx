@@ -9,13 +9,11 @@ class Detail extends Component {
         return (
             <div className = "detail">
                 <BookDetail
-                    book={this.props.book}
-                    tag={[{name: '123', _id: '1'}, {name: '12fd3', _id: '2'}]}
-                    pos={[{
-                        _id: '3234', name: '书房 A面第二层'
-                    }, {
-                        _id: '4234', name: '客厅 第一层'
-                    }]}
+                    book={Object.assign({}, this.props.book, {
+                        isMine: true
+                    })}
+                    tag={[]}
+                    pos={[]}
                     categories={[]}
                 />
             </div>
