@@ -27,8 +27,14 @@ const bookSchema = new Schema({
 
     borrower: { type: String }, // 借阅人
     borrowTime: { type: Date }, // 借阅时间
-    returnTime: { type: Date } // 归还时间
-
+    returnTime: { type: Date }, // 归还时间
+    createTime: { type: Date },
+    updateTime: { type: Date }
+}, {
+    timestamps: {
+        createdAt: 'createTime',
+        updatedAt: 'updateTime'
+    }
 })
 
 export default mongoose.model('book', bookSchema)
