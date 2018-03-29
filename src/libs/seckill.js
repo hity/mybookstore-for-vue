@@ -1,8 +1,7 @@
 /* 秒杀组件
-    功能：根据给定的模版，编译生成秒杀Dom结构 or 串；
-        其中包含requestAnimationFrame的倒计时，
-        根据服务器时间与客户端时间差，来获取实时的服务器时间；
-        对客户端时间进行校验等
+    功能：a、服务端时间不需要多次请求
+        b、客户端时间校准
+        c、模版自定义（当前模版无法实现UI需求时，可使用perCb进行定制）
     参数：
         style: 样式，会提供默认样式；
         template: 倒计时渲染的模版，其中包含关键子：
@@ -26,25 +25,20 @@
         *gap[与getServerTime必有其一]: 服务端与客户端时间差 gap = frontTime - serverTime；
         *startTime[必须]: 秒杀开始时间；
         *endTime［必须］：秒杀结束时间；
-        during: UI渲染频率，单位ms; 必须大于100ms；
+        during: UI渲染频率，单位ms; 默认为100ms；
         perCb: 倒计时中的回调，dom挂载成功后，执行perCallback，其参数为Object，{ year, month, week, day, hour, minute, second, _100ms}
         beginSeckillCb: 秒杀开始时的回调；［参数同perCb］
         endSeckillCb: 秒杀结束时的回调。[无参数]
 
 *************************/
 
-const defaultStyle = ''
+const defaultStyle = '#seckill{width: 80%; margin: auto;} #seckill .time-block {display: inline-block; width: 14px; height: 20px; text-align: center; line-height: 20px; background-color: rgba(0, 0, 0, 0.6); color: #fff; margin: 0 1px;}#seckill .ms-block{background-color:green}'
 const defaultTemplate = [
     '$isBefore{<span>即将开始</span>}',
     '$isIng{<span>进行中</span>}',
     '$isAfter{<span>已结束</span>}',
     '$isIng||$isBefore{<div>',
-    '   <span class="time-block">$W</span>',
-    '   <span class="time-block">周</span>',
-    '   ,',
-    '   <span class="time-block">$D</span>',
-    '   <span class="time-block">天</span>',
-    '     ',
+    '   $D 天 ， ',
     '   <span class="time-block">$h</span>',
     '   <span class="time-block">$h</span>',
     '   :',
@@ -53,8 +47,8 @@ const defaultTemplate = [
     '   :',
     '   <span class="time-block">$s</span>',
     '   <span class="time-block">$s</span>',
-    '   :',
-    '   <span class="time-block">$_100ms</span>',
+    '    ',
+    '   <span class="time-block ms-block">$_100ms</span>',
     '</div>}'
 ].join('')
 
@@ -92,15 +86,13 @@ const timeOptions = [{
     mult: 1
 }]
 const defaultThreshold = 10 * 1000
-const defaultDuring = 1000
-const minDuring = 100
+const defaultDuring = 100
 
 class Seckill {
     constructor(options) {
         Object.assign(this, {
             style: defaultStyle,
             template: defaultTemplate,
-            el: document.querySelector('body'),
             during: defaultDuring,
             threshold: defaultThreshold
         },
@@ -110,14 +102,14 @@ class Seckill {
             _moment: null, // 倒计时返回
             _beginSeckillCbDone: false // 开始秒杀回调是否执行
         })
-
-        // 参数校验
-        if (this._checkAFormatData()) {
-            this.init()
-        }
     }
 
     init() {
+        if (!this._checkAFormatData(this)) {
+            return
+        }
+
+        this.el = !this.el ? document.querySelector('body') : this.el
         // style渲染
         this._renderStyle()
 
@@ -132,8 +124,8 @@ class Seckill {
 
     // 参数校验
     _checkAFormatData() {
-        if (this.during < minDuring) {
-            this.during = minDuring
+        if (this.during < defaultDuring) {
+            this.during = defaultDuring
         }
 
         if (!(typeof this.getServerTime === 'function' || this.gap)) {
@@ -141,13 +133,12 @@ class Seckill {
             return false
         }
         // 客户端时间异常检验阈值
-        if (this.threshold < this.during || this.threshold < this.defaultThreshold) {
-            this.threshold = this.during + this.defaultThreshold
+        if (this.threshold < this.during || this.threshold < defaultThreshold) {
+            this.threshold = this.during + defaultThreshold
         }
 
         this.startTime = this._formatDate(this.startTime)
         this.endTime = this._formatDate(this.endTime)
-
         if (this.startTime >= this.endTime) {
             console.log('error, 时间参数错误')
             return false
@@ -158,7 +149,9 @@ class Seckill {
     _renderStyle() {
         let style = this.style
         if (typeof style === 'string' && style.trim()) {
-            document.querySelector('head').append('<style type="text/css">' + style + '</style>')
+            let styleElem = document.createElement('style')
+            styleElem.innerHTML = style
+            document.querySelector('head').append(styleElem)
         }
     }
 
@@ -186,7 +179,7 @@ class Seckill {
         if (typeof date === 'number') {
             return date
         } else if (typeof date === 'string') {
-            return new Date(date.replace(/-/g, '/'))
+            return new Date(date.replace(/-/g, '/')).getTime()
         } else {
             console.log('error 时间无效')
             return 0
@@ -214,14 +207,14 @@ class Seckill {
     }
 
     // 当客户端时间变化大于阈值时，客户端时间异常：该时间小于
-    _validClientTime() {
+    _isValidClientTime() {
         return !this._isGetServerTimeValid || Math.abs(new Date() - this._preClientTime) < this.threshold
     }
 
     // 倒计时功能
     _start() {
         // 客户端时间校验
-        if (!this._validClientTime()) {
+        if (!this._isValidClientTime()) {
             this._getGap().then(() => {
                 this._start()
             }).catch((err) => {
@@ -237,14 +230,14 @@ class Seckill {
             let rst = this._compile(restTime, this.template)
 
             // 挂载
-            this._mount(rst.template, this.el)
-
+            this._mount(rst.template, this.el, this.pClass)
+            delete rst.template
             // 每次执行的回调
-            this.perCb && this.perCb(rst.timeObj)
+            this.perCb && this.perCb(rst)
 
             // 开始秒杀，执行回调
             if (this._isIng() && this.beginSeckillCb && !this._beginSeckillCbDone) {
-                this.beginSeckillCb && this.beginSeckillCb(rst.timeObj)
+                this.beginSeckillCb && this.beginSeckillCb(rst)
                 this._beginSeckillCbDone = true
             }
 
@@ -253,7 +246,7 @@ class Seckill {
 
             // 结束时，执行结束回调
             if (this._isAfter()) {
-                this.endSeckillCb && this.endSeckillCb(rst.timeObj)
+                this.endSeckillCb && this.endSeckillCb(rst)
             } else {
                 this._moment = setTimeout(this._start.bind(this), this.during)
             }
@@ -261,12 +254,13 @@ class Seckill {
     }
 
     // 挂载
-    _mount(template, el) {
+    _mount(template, el, pClass) {
         let pElem = document.querySelector('#seckill')
 
         if (!pElem) {
             pElem = document.createElement('div')
             pElem.id = 'seckill'
+            pElem.className = !pClass ? '' : pClass
             el.append(pElem)
         }
 
@@ -275,12 +269,10 @@ class Seckill {
 
     _compile(restTime, template) {
         // 提取模版选项
-        let restOptions = timeOptions.filter((item) => {
-            return template.indexOf('$' + item.key) != -1
-        })
+        let restOptions = this._computeRestOptions(timeOptions, template)
 
         // 根据模版选项，计算出时间结果对象
-        let timeObj = this._computeTime(timeOptions, restTime)
+        let timeObj = this._computeTime(restOptions, restTime)
 
         // 处理模版的展现逻辑
         template = this._compileDisplay(template)
@@ -290,21 +282,42 @@ class Seckill {
 
         return {
             template,
-            timeObj
+            time: timeObj,
+            state: {
+                isIng: this._isIng(),
+                isBefore: this._isBefore(),
+                isAfter: this._isAfter()
+            }
         }
     }
 
+    // 提取模版包含的时间参数
+    _computeRestOptions(timeOptions, template) {
+        return timeOptions.filter((item) => {
+            return template.indexOf('$' + item.key) != -1
+        })
+    }
+
+    // 根据时间参数，计算出对应的时间值
     _computeTime(restOptions, restTime) {
         let timeObj = {}
         // 计算剩余项目的结果
         restOptions.forEach((item, index) => {
-            let sum = restOptions.slice(index)
+            let oriIndex = 0
+            timeOptions.some((e, i) => {
+                oriIndex = i
+                return e.name == item.name
+            })
+            let sum = timeOptions.slice(oriIndex)
                 .map(item => item.mult)
                 .reduce((x, y) => {
                     return x * y
                 })
             // 如果是年或者月，去除周的影响
-            if ((item.key === 'Y' || item.key === 'M') && timeOptions.some(item => item.key === 'W')) {
+            if (item.key === 'Y') {
+                sum = sum / (7 * 30)
+            }
+            if (item.key === 'M') {
                 sum = sum / 7
             }
             if (item.key === '_100ms') {
