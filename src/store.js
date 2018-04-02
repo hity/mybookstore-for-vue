@@ -7,6 +7,7 @@ import {
 } from 'redux'
 
 import createbookReducer from './pages/createbook/redux/reducer'
+import { composeWithDevTools } from 'redux-devtools-extension'
 
 const win = window
 
@@ -28,4 +29,4 @@ const storeEnhancers = compose(
     (win && win.devToolsExtension) ? win.devToolsExtension() : (f) => f
 )
 
-export default createStore(reducer, {}, storeEnhancers)
+export default createStore(reducer, {}, storeEnhancers, composeWithDevTools())
