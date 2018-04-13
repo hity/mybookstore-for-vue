@@ -21,3 +21,44 @@ export const crosJsonp = (url, cb) => {
     script.setAttribute('src', url)
     document.body.appendChild(script)
 }
+
+// 限流
+export const throttleTail = (fn, delay, ctx) => {
+    let isAvail = true
+    let count = false
+    let movement = null
+    return function() {
+        count = true
+        let args = arguments
+        if (isAvail) {
+            fn.apply(ctx, args)
+            isAvail = false
+            count = false
+            setTimeout(() => {
+                isAvail = true
+            }, delay)
+        }
+        if (count) {
+            clearTimeout(movement)
+            movement = setTimeout(() => {
+                fn.apply(ctx, args)
+            }, 2 * delay)
+        }
+    }
+}
+
+// 限流不收尾
+export const throttle = (fn, delay, ctx) => {
+    let isAvail = true
+    let movement = null
+    return function() {
+        let args = arguments
+        if (isAvail) {
+            fn.apply(ctx, args)
+            isAvail = false
+            setTimeout(() => {
+                isAvail = true
+            }, delay)
+        }
+    }
+}

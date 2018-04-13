@@ -27,8 +27,8 @@ var webpackConfig = require('./webpack.dev.conf')
 // default port where dev server listens for incoming traffic
 
 var fs = require('fs');
-// var http = require('http');
-var https = require('https');
+var http = require('http');
+// var https = require('https');
 var privateKey  = fs.readFileSync('./private.pem', 'utf8');
 var certificate = fs.readFileSync('./file.crt', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
@@ -38,7 +38,7 @@ var credentials = {key: privateKey, cert: certificate};
 
 // 如果没有指定运行端口，使用 config.dev.port 作为运行端口
 var port = process.env.PORT || config.dev.port
-var uri = 'https://' + ip + ':' + port
+var uri = 'http://' + ip + ':' + port
 
 // var port = sslPort
 // var uri = sslUri
@@ -152,10 +152,10 @@ devMiddleware.waitUntilValid(function() {
     console.log('> Listening at ' + uri + '\n')
 })
 
-var httpsServer = https.createServer(credentials, server);
+// var httpServer = http.createServer(credentials, server);
 
 // 让我们这个 express 服务监听 port 的请求，并且将此服务作为 dev-server.js 的接口暴露
-module.exports = httpsServer.listen('8000', function (err) {
+module.exports = server.listen('8000', function (err) {
     if (err) {
         console.log(err)
         return

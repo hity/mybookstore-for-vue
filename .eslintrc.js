@@ -25,7 +25,7 @@ module.exports = {
         // "compat/compat": 2,
         "comma-dangle": 0,
         "consistent-return": 2,
-        "func-names": 2,
+        "func-names": 0,
         "generator-star-spacing": [0],
         "import/no-extraneous-dependencies": ["off"],
         "import/extensions": 0,
