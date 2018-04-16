@@ -24,8 +24,8 @@ import { throttle, throttleTail } from './utils'
 const defaultStyle = [
     '.picker {position:fixed; bottom:10%; left: 0; width: 100%; height: 20%; display: flex;}',
     '.picker ul{position: relative; height:auto; top: 50%; flex: 1 auto;}',
-    'li {line-height: 20px;}',
-    '.target-line {width: 100%; height: 20px; position: absolute; top:50%; border: 1px solid #ddd;}'
+    'li {line-height: 30px;}',
+    '.target-line {width: 100%; height: 30px; position: absolute; top:50%; border: 1px solid #ddd;}'
 ].join('')
 
 const defaultLiTemplate = '<li key="{{id}}">{{value}}</li>'
@@ -198,19 +198,43 @@ class Picker {
         }
     }
 
-    // touch时，移动面板
+    // touch时，移动面板UI渲染
     _renderTouchUi(touchInfo, ulElem, index) {
-        let touchGap = (touchInfo.preTouchY - touchInfo.currTouchY)
-        let yCount = touchGap / touchInfo.lineHeight
-        yCount = (touchGap / touchInfo.lineHeight).toFixed(0)
+        let {
+            preTouchY,
+            currTouchY,
+            lineHeight,
+            translateY,
+            minY,
+            maxY
+        } = touchInfo
 
-        let yGap = -1 * yCount * touchInfo.lineHeight
+        let touchGap = (preTouchY - currTouchY)
+        let yCount = touchGap / lineHeight
+        yCount = (touchGap / lineHeight).toFixed(0)
 
-        if ((touchInfo.translateY + yGap) > touchInfo.minY && (touchInfo.translateY + yGap) <= touchInfo.maxY) {
-            touchInfo.translateY += yGap
+        let yGap = -1 * yCount * lineHeight
+
+        // 到达底部，做上拉操作
+        if (translateY == minY && (translateY + yGap) < minY) {
+            return
         }
-        ulElem.style.transform = 'translate(0, ' + touchInfo.translateY + 'px)'
-        this._target[index] = this._list[index][Math.abs((touchInfo.translateY / touchInfo.lineHeight))]
+
+        // 到达底部，做下拉操作
+        if (translateY == maxY && (translateY + yGap) > maxY) {
+            return
+        }
+
+        if ((translateY + yGap) >= minY && (translateY + yGap) <= maxY) {
+            translateY += yGap
+        } else if ((translateY + yGap) < minY) {
+            translateY = minY
+        } else if ((translateY + yGap) > maxY) {
+            translateY = maxY
+        }
+        ulElem.style.transform = 'translate(0, ' + translateY + 'px)'
+        this._target[index] = this._list[index][Math.abs((translateY / lineHeight))]
+        touchInfo.translateY = translateY
     }
 
     // 注册事件
@@ -222,9 +246,10 @@ class Picker {
             currTouchY: 0,
             lineHeight: lineHeight,
             maxY: 0,
-            minY: -this._list[index].length * lineHeight,
+            minY: -1 * (this._list[index].length - 1) * lineHeight,
             translateY: 0
         }
+
         let handleWholePanel = throttleTail(this._handleWholePanel, 1000, this)
         let renderTouchUi = throttle(this._renderTouchUi, 100, this)
 
