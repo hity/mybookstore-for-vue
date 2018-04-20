@@ -31,6 +31,7 @@ export const throttleTail = (fn, delay, ctx) => {
         count = true
         let args = arguments
         if (isAvail) {
+            console.log('in')
             fn.apply(ctx, args)
             isAvail = false
             count = false
@@ -41,6 +42,7 @@ export const throttleTail = (fn, delay, ctx) => {
         if (count) {
             clearTimeout(movement)
             movement = setTimeout(() => {
+                console.log('in in')
                 fn.apply(ctx, args)
             }, 2 * delay)
         }

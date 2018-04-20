@@ -1,14 +1,11 @@
-/* 秒杀组件
-    功能：a、服务端时间不需要多次请求
-        b、客户端时间校准
-        c、模版自定义（当前模版无法实现UI需求时，可使用perCb进行定制）
+/* picker组件
     参数：
         style: 样式，会提供默认样式；
         template: dom;{{value}}其中的value为getList返回的list中item的属性;
         el: 挂载点（默认为body）;
-        pClass: 自定义秒杀组件容器的类;
+        pClass: 自定类;
         defaultTarget: 默认值；与target的结构相同
-        isCascade: 是否级联，默认不级联。如果级联打开，当list为空时，则停止级联
+        isCascade: 是否级联，默认级联。如果级联打开，当list为空时，则停止级联
         *getList: type: function;
             输入：
                 target: type: array，返回选中结果数组，
@@ -22,10 +19,11 @@
 import { throttle, throttleTail } from './utils'
 
 const defaultStyle = [
-    '.picker {position:fixed; bottom:10%; left: 0; width: 100%; height: 20%; display: flex;}',
-    '.picker ul{position: relative; height:auto; top: 50%; flex: 1 auto;}',
-    'li {line-height: 30px;}',
-    '.target-line {width: 100%; height: 30px; position: absolute; top:50%; border: 1px solid #ddd;}'
+    '.picker * {margin: 0; padding: 0;}',
+    '.picker {position:fixed; bottom:10%; left: 0; width: 98%; padding: 0 1%; height: 30%; display: flex; overflow:hidden;}',
+    '.picker ul{position: relative; height:auto; top: 50%; flex: 1 1; list-style: none;}',
+    'li {line-height: 30px; overflow: hidden; width: 100%; height: 30px; line-height: 30px; text-align: center;}',
+    '.target-line {width: 100%; height: 30px; position: absolute; top:50%; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd;}'
 ].join('')
 
 const defaultLiTemplate = '<li key="{{id}}">{{value}}</li>'
@@ -35,7 +33,8 @@ class Picker {
         Object.assign(this, {
             style: defaultStyle,
             liTemplate: defaultLiTemplate,
-            defaultTarget: []
+            defaultTarget: [],
+            isCascade: true
         },
         options, {
             _target: [],
@@ -200,14 +199,20 @@ class Picker {
 
     // touch时，移动面板UI渲染
     _renderTouchUi(touchInfo, ulElem, index) {
+        this._pElem.querySelectorAll('ul').forEach((item, tIndex) => {
+            if (tIndex > index) {
+                item.style.transform = 'translate(0, 0)'
+            }
+        })
         let {
             preTouchY,
             currTouchY,
             lineHeight,
-            translateY,
-            minY,
-            maxY
+            translateY
         } = touchInfo
+
+        let maxY = 0
+        let minY = -1 * (this._list[index].length - 1) * lineHeight
 
         let touchGap = (preTouchY - currTouchY)
         let yCount = touchGap / lineHeight
@@ -245,13 +250,11 @@ class Picker {
             preTouchY: 0,
             currTouchY: 0,
             lineHeight: lineHeight,
-            maxY: 0,
-            minY: -1 * (this._list[index].length - 1) * lineHeight,
             translateY: 0
         }
 
-        let handleWholePanel = throttleTail(this._handleWholePanel, 1000, this)
         let renderTouchUi = throttle(this._renderTouchUi, 100, this)
+        let handleWholePanel = throttleTail(this._handleWholePanel, 500, this)
 
         ulElem.addEventListener('touchstart', (event) => {
             touchInfo.preTouchY = event.touches[0].clientY
@@ -261,6 +264,10 @@ class Picker {
             touchInfo.currTouchY = event.touches[0].clientY
             renderTouchUi(touchInfo, ulElem, index)
             handleWholePanel(index + 1)
+        }, false)
+
+        ulElem.addEventListener('touchend', (event) => {
+            this._handleWholePanel(index + 1)
         }, false)
     }
 }

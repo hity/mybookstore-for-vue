@@ -2,54 +2,70 @@
 import React from 'react'
 import Toolbar from 'src/components/toolbar/index'
 import Picker from 'src/libs/picker'
+import Picker2 from 'src/libs/picker2'
 import Quagga from 'quagga'
+import axios from 'axios'
+
+let keys = [
+    'province',
+    'city',
+    'district',
+    'street'
+]
 new Picker({
-    isCascade: true,
-    defaultTarget: [{
-        key: '34',
-        value: '34'
-    }, {
-        key: 'cd',
-        value: 'cd'
-    }],
+    // isCascade: true,
+    defaultTarget: [
+        {value: '陕西省', id: '610000'},
+        {value: '榆林市', id: '610800'},
+        {value: '绥德县', id: '610826'},
+        {value: '薛家河镇', id: '610826005'}
+    ],
     done: (info) => {
         console.log('info', info)
     },
     getList: (target = [], index = 0) => {
         return new Promise((resolve, reject) => {
-            console.log('index', index, target)
-            let isDone = false
-            let list = [{
-                id: '12',
-                value: '12'
-            }, {
-                id: '34',
-                value: '34'
-            }, {
-                id: '56',
-                value: '56'
-            }]
-
-            if (index == 1) {
-                list = [{
-                    id: 'ab',
-                    value: 'ab'
-                }, {
-                    id: 'cd',
-                    value: 'cd'
-                }, {
-                    id: 'ef',
-                    value: 'ef'
-                }]
+            let rst = {
+                list: [],
+                isDone: false,
+                success: true
             }
 
-            if (index == 2) {
-                isDone = true
+            if (index === 4) {
+                rst.isDone = true
+                resolve(rst)
+                return
             }
-            resolve({
-                success: true,
-                list,
-                isDone
+
+            let paramsKey = index - 1 >= 0 ? keys[index - 1] : keys[index]
+            let key = keys[index]
+            axios.get('/common/' + key + 's', {
+                params: {[paramsKey + 'Code']: target[index - 1] ? target[index - 1].id : ''}
+            }).then(({
+                data: {
+                    result,
+                    success
+                }
+            }) => {
+                if (success && result) {
+                    if (result.length) {
+                        rst.list = result.map(item => {
+                            return {
+                                value: item[key],
+                                id: item[key + 'Code']
+                            }
+                        })
+                    } else {
+                        rst.isDone = true
+                    }
+                } else {
+                    rst.success = false
+                }
+                resolve(rst)
+            }).catch((error) => {
+                resolve({
+                    success: false
+                })
             })
         })
     }
@@ -122,8 +138,8 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
-                <div className="b-content">{this.props.children}</div>
-                <div className="b-footer"><Toolbar></Toolbar></div>
+                <div className="b-content" style="display:none">{this.props.children}</div>
+                <div className="b-footer" style="display:none"><Toolbar></Toolbar></div>
             </div>
         )
     }
