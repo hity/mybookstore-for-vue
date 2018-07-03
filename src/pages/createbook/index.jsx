@@ -10,7 +10,6 @@ import { filterDouban } from './redux/action'
 
 class CreateBook extends Component {
     render() {
-        console.log('in')
         return (
             <div className = "create-book">
                 <Searchbar searchCb={this.props.searchCb}/>

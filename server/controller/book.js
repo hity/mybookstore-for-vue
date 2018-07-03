@@ -34,6 +34,7 @@ export default {
 
 	getBook: async (req, res, next) => {
 		let data = req.query
+		console.log('here')
 		try {
 			let rst = await baseModel.getInfo(bookModel, data)
 			res.send(rst)

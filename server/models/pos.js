@@ -2,12 +2,13 @@ import mongoose from 'mongoose'
 
 const positionSchema = new mongoose.Schema({
     name: { type: String, unique: true, index: true},  // 名称
-    createTime: { type: Date },
-    updateTime: { type: Date }
-}, {
-    timestamps: {
-        createdAt: 'createTime',
-        updatedAt: 'updateTime'
+    createTime: {
+        type: Date,
+        default: Date.now
+    },
+    updateTime: {
+        type: Date,
+        default: Date.now
     }
 });
 

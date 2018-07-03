@@ -5,6 +5,7 @@ const Search = Input.Search
 
 export default class Searchbar extends React.Component {
     render() {
+        console.log('searchbar', this.props)
         return (
             <Row className = "searchbar">
                 <Col span={24}>
