@@ -9,9 +9,6 @@ module.exports = {
     parser: 'babel-eslint', // import的模式替代require
     parserOptions: {
         sourceType: 'module',
-        "ecmaFeatures": {
-            "jsx": true
-        }
     }, // import的模式替代require
     "globals": {
         "window": true,
@@ -38,7 +35,7 @@ module.exports = {
         "no-nested-ternary": 0,
         "no-underscore-dangle": 0,
         "no-var": "error",
-        "semi": ["error", "always"],
+        "semi": 0,
         "promise/param-names": 2,
         "promise/always-return": 0,
         "promise/catch-or-return": 0,
@@ -66,12 +63,11 @@ module.exports = {
         }],
         "linebreak-style": 0, // ["warn", "windows"],
         "quotes": ["error", "single"],
-        "semi": ["error", "never"],
         "eqeqeq": [0, "allow-null"],
         "operator-linebreak": [0, "before"],
         //"no-extra-semi": ["error"],
         // override default options for rules from base configurations
-        "comma-dangle": ["error", "never"],
+        "comma-dangle": 0,
         "no-cond-assign": ["error", "always"],
         // allow paren-less arrow functions
         'arrow-parens': 0,
@@ -81,7 +77,6 @@ module.exports = {
         'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
     },
     settings: {
-        "import/resolver": "webpack",
         "import/extensions": [".js", ".jsx"]
     },
 };

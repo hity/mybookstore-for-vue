@@ -1,0 +1,165 @@
+/* 公共样式：header/sidebar/content */
+
+@import 'src/assets/styles/var.scss';
+@import './element_reset.scss';
+html {
+    width: 100%;
+    height: 100%;
+    min-width: 1280px;
+    body {
+        width: 100%;
+        height: 100%;
+        font-family: 'PingFangSC-Regular';
+        font-size: 14px;
+        overflow: hidden;
+        .view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+    }
+}
+
+.g-hd {
+    border-color: #e7e7e7;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+    width: 100%;
+    color: $navFontColor;
+    background: $navBgColor;
+    text-align: center;
+    line-height: 60px;
+    height: 60px;
+    padding-left: 200px;
+    padding-right: 20px;
+    .logo {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 200px;
+        text-align: center;
+        img {
+            display: block;
+            width: 157px;
+            height: auto;
+            margin: 14px 21px;
+        }
+    }
+}
+
+.g-bd {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    .sidebar-f {
+        flex: 1 0 auto;
+        width: 72px;
+        height: 100%;
+        overflow-y: auto;
+        color: $navFontColor;
+        background: $navBgColor;
+        font-size: 14px;
+        text-align: center;
+        line-height: 40px;
+    }
+
+    .sidebar-s {
+        flex: 1 0 auto;
+        overflow-y: auto;
+        position: relative;
+        width: 110px;
+        height: 100%;
+        color: #666666;
+        background: #f2f2f2;
+        line-height: 40px;
+        text-align: center;
+        .g-sd {
+            .ivu-menu {
+                padding-bottom: 100px;
+            }
+        }
+    }
+    .g-ct {
+        overflow-y: auto;
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+}
+
+.m-hd {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 120px;
+    h1.title {
+        padding-left: 20px;
+        line-height: 60px;
+        font-size: 20px;
+        font-weight: normal;
+    }
+    .handler {
+        position: relative;
+        line-height: 60px;
+        background-color: #f2f2f2;
+        font-size: 0;
+    }
+    .handler-item {
+        padding-left: 10px;
+        padding-right: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        border-left: 1px solid #dddee1;
+        span {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 12px;
+            &.prefix {
+                margin-right: 10px;
+            }
+        }
+        .ivu-icon {
+            font-size: 16px;
+        }
+        &:first-child {
+            border-left: none;
+        }
+        &.right {
+            position: absolute;
+            right: 0;
+            border-left: none;
+        }
+
+        .ivu-cascader {
+            display: inline-block;
+        }
+    }
+}
+
+.icon-tongguo {
+    color: #89d476;
+}
+
+.icon-jujue {
+    color: #ff5b22;
+}
+
+.one-line {
+    @include nLineLimit(1);
+}
+
+.five-line {
+    @include nLineLimit(5);
+}
+
+.full_cell {
+    width: 100%;
+    height: 100%;
+}
+
+.ivu-menu-item-active {
+    color: #495060!important;
+}

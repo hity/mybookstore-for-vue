@@ -8,6 +8,7 @@ import asyncModule from 'async'
 export default {
 	addBook: async (req, res, next) => {
 		let data = req.body
+		console.log('data', data);
 		if (!data.name) {
 			res.send({
 				success: false,
@@ -17,26 +18,37 @@ export default {
 		}
 		try {
 			let info = await baseModel.add2Db(bookModel, {name: data.name}, data)
+			console.log('info', info);
 			await addTag(data.tag)
 			await baseModel.add2Db(categoryModel, {name: data.category}, {name: data.category})
 			await baseModel.add2Db(posModel, {name: data.pos}, {name: data.pos})
+			console.log('here');			
 			res.send({
-				success: true
+				success: !!info
 			})
 		} catch (err) {
 			res.send({
 				success: false
 			})
-			console.log('book存储失败');
+			console.log('book存储失败', err);
 			throw new Error(err)
 		}
 	},
 
 	getBook: async (req, res, next) => {
-		let data = req.query
-		console.log('here')
+		let {
+			searchValue
+		} = req.query
+			
+		console.log('here', searchValue)
 		try {
-			let rst = await baseModel.getInfo(bookModel, data)
+			let rst = await baseModel.getInfo(bookModel, {
+				$or: [
+					{name: new RegExp(searchValue)}, 
+					{ISBN: new RegExp(searchValue)}, 
+					{author: new RegExp(searchValue)}
+				]
+			 });
 			res.send(rst)
 		} catch (err) {
 			res.send({

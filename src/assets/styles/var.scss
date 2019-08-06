@@ -1,0 +1,19 @@
+@charset 'utf-8';
+$mainColor: #108ee9;
+$navFontColor: #fff;
+$navBgColor: #3f3f3f;
+
+@mixin nLineLimit($n) {
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-word-break: break-all;
+    box-orient: vertical;
+    -webkit-box-orient: vertical;
+    line-clamp: $n;
+    -webkit-line-clamp: $n;
+}

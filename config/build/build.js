@@ -1,16 +1,16 @@
 process.env.NODE_ENV = 'production'
 
-let ora = require('ora')
-let rm = require('rimraf')
-let path = require('path')
-let chalk = require('chalk')
-let webpack = require('webpack')
-let config = require('../config')
-let webpackConfig = require('./webpack.prod.conf')
+var ora = require('ora')
+var rm = require('rimraf')
+var path = require('path')
+var chalk = require('chalk')
+var webpack = require('webpack')
+var config = require('../config')
+var webpackConfig = require('./webpack.prod.conf')
 
-let start = new Date()
+var start = new Date()
 
-let spinner = ora('building for production...')
+var spinner = ora('building for production...')
 spinner.start()
 
 rm(path.join(config.build.assetsDllRoot, 'manifest.json'), err => {})
@@ -28,7 +28,7 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
             chunkModules: false
         }) + '\n\n')
 
-        let end = new Date()
+        var end = new Date()
 
         console.log(chalk.cyan('  Build complete.\n'))
         console.log('executing time ', end - start)

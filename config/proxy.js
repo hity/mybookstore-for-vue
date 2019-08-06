@@ -1,6 +1,6 @@
-var RAP_SERVICE = 'http://192.168.4.102:9999/mockjsdata/'
+const RAP_SERVICE = 'http://192.168.4.102:9999/mockjsdata/'
 module.exports = {
-    proxyAllUrl: 'http://hity.test.com:3000/', // 如果不为空，那么所有的请求都将代理到这个url
+    proxyAllUrl: 'http://hity.test.com:5000/', // 如果不为空，那么所有的请求都将代理到这个url
     // RAP服务接口
     proxyTable: {
         '/api/book': RAP_SERVICE + '170',
@@ -12,4 +12,4 @@ module.exports = {
     proxyLocal: {
         '/post/saveItem': '/proxy/post?json=/data/download.json&'
     }
-};
+}

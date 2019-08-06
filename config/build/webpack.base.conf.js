@@ -1,10 +1,10 @@
-let path = require('path')
-let utils = require('./utils')
-let config = require('../config')
-let vueLoaderConfig = require('./vue-loader.conf')
-let ExtractTextPlugin = require('extract-text-webpack-plugin')
-let HappyPack = require('happypack');
-let happyThreadPool = HappyPack.ThreadPool({
+var path = require('path')
+var utils = require('./utils')
+var config = require('../config')
+var vueLoaderConfig = require('./vue-loader.conf')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var HappyPack = require('happypack');
+var happyThreadPool = HappyPack.ThreadPool({
     size: 4
 });
 
@@ -57,6 +57,10 @@ module.exports = {
             loader: 'vue-loader',
             include: [resolve('src')],
             options: vueLoaderConfig
+        }, {
+            test: /\.js$/,
+            loader: 'happypack/loader?id=js',
+            include: [resolve('src'), resolve('/node_modules/iview/src'), ]
         }, {
             test: /\.(png|jpe?g|gif|svg|bmp)(\?.*)?$/,
             loader: 'url-loader',

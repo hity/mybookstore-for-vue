@@ -1,6 +1,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
-var path = require('path')
-var proxyConfig = require('./proxy');
+let path = require('path')
+let proxyConfig = require('./proxy');
 
 module.exports = {
     build: {
@@ -17,7 +17,7 @@ module.exports = {
         // npm install --save-dev compression-webpack-plugin
         productionGzip: false,
         productionGzipExtensions: ['js', 'css'],
-        cssSourceMap: true,
+        cssSourceMap: false,
         extractCss: true
     },
     dev: {
@@ -36,7 +36,7 @@ module.exports = {
         // (https://github.com/webpack/css-loader#sourcemaps)
         // In our experience, they generally work as expected,
         // just be aware of this issue when enabling this option.
-        cssSourceMap: true,
+        cssSourceMap: false,
         extractCss: false
     }
     // historyArr: historyArr
