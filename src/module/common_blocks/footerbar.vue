@@ -41,7 +41,7 @@ export default {
     width: 100%;
     position: fixed;
     bottom: 0;
-    height: 2rem;
+    height: 1.6rem;
     border-top: 1px solid $border-color;
     .toolbar {
         height: 100%;
