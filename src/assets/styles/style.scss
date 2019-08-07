@@ -1,11 +1,5 @@
-// 引入公共样式
+@import 'src/assets/styles/reset.scss';
+@import 'src/assets/styles/common.scss';
+@import 'src/assets/styles/transition.scss';
+@import 'src/assets/styles/var.scss';
 
-/**
- * @author:      hity
- * @dateTime:    2018-09-26
- * @description: 整体style文件
- */
-
-@import '@/assets/styles/reset.scss';
-@import '@/assets/styles/common.scss';
-@import '@/assets/styles/transition.scss';

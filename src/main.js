@@ -9,14 +9,12 @@ import VueRouter from 'vue-router';
 import App from './App.vue';
 import configRouter from '@/routes';
 import store from '@/store';
-import ElementUi from 'element-ui';
-import Pagination from '@/components/pagination';
+import MintUI from 'mint-ui'
 
-import 'element-ui/lib/theme-chalk/index.css';
-import '@/assets/styles/fontawesome-all.css';
+import 'mint-ui/lib/style.css'
 import '@/assets/styles/iconfont.css';
 
-Vue.use(ElementUi);
+Vue.use(MintUI)
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -33,7 +31,6 @@ router.beforeEach((to, from, next) => {
 
 // Vue.config.debug = true
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
-Vue.component('store-pagination', Pagination);
 
 new Vue({
     el: '#app',

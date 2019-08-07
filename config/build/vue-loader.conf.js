@@ -1,8 +1,8 @@
-var utils = require('./utils')
-var config = require('../config')
-var isProduction = process.env.NODE_ENV === 'production'
+let utils = require('./utils')
+let config = require('../config')
+let isProduction = process.env.NODE_ENV === 'production'
 
-var loaders = utils.cssLoaders({
+let loaders = utils.cssLoaders({
     sourceMap: isProduction ? config.build.productionSourceMap : config.dev.cssSourceMap,
     extract: isProduction ? config.build.extractCss : config.dev.extractCss
 });

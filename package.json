@@ -103,6 +103,7 @@
         "better-scroll": "^1.11.1",
         "clipboard": "^1.7.1",
         "lodash": "^4.17.4",
+        "mint-ui": "^2.2.13",
         "weixin-js-sdk": "^1.3.3"
     }
 }

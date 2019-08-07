@@ -1,7 +1,42 @@
 @charset 'utf-8';
-$mainColor: #108ee9;
-$navFontColor: #fff;
-$navBgColor: #3f3f3f;
+$designWidth: 750;
+@function px2rem( $px  ){
+    @return $px*320/$designWidth/20 + rem;
+}
+
+$theme-color            : #bb99b8;
+$text-color             : #bb99b8;
+$border-color           : #e1e3e6;
+
+$text-2                 : #222;
+$text-3                 : #333;
+$text-6                 : #666;
+$text-9                 : #999;
+$text-c                 : #ccc;
+$text-d                 : #f2f3f5;
+$text-e                 : #f7f7fa;
+
+$assistant-danger       : #f24957;
+$assistant-success      : #26bd71;
+$assistant-warning      : #ffaf0f;
+$assistant-info         : #8875ff;
+
+// 页面
+$body-background        : #fff;
+// 组件
+$component-background   : #fff;
+// 标题或选中的项目
+$background-color-light : $text-e;
+// 默认的灰色背景
+$background-color-base  : $text-d;
+
+// 基础，正文
+$font-size-base         : px2rem(24);
+// 大，大标题
+$font-size-lg           : px2rem(28);
+// 小，正文/小标题/辅助文字
+$font-size-sm           : px2rem(20);
+
 
 @mixin nLineLimit($n) {
     display: box;

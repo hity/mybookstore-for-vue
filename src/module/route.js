@@ -3,8 +3,8 @@
  * @dateTime:    2018-09-26
  * @description: module路由
  */
-// import accountRoute from 'module/account/route';
+import listRoute from 'module/list/route';
 
 export default [
-    // ...accountRoute,
+    ...listRoute,
 ];

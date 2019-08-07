@@ -5,15 +5,15 @@
 -->
 <template>
     <div style="width: 100%;height:100%;">
-        <headerbar></headerbar>
         <router-view></router-view>
+        <footerbar></footerbar>
     </div>
 </template>
 <script>
-import headerbar from './common_blocks/headerbar';
+import footerbar from './common_blocks/footerbar.vue';
 
 export default {
     name: 'pageApp',
-    components: { headerbar }
+    components: { footerbar }
 };
 </script>

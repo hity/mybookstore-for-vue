@@ -4,17 +4,15 @@
  - @description: module容器
 -->
 <template>
-    <!-- <headerbar></headerbar> -->
     <div class="g-bd">
+        <router-view></router-view>
     </div>
 </template>
 <script>
-import headerbar from './common_blocks/headerbar.vue';
 import { mapMutations, mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'moduleIndex',
-    components: { headerbar },
     data() {
         return {
         };
@@ -28,7 +26,6 @@ export default {
     methods: {
     }
 };
-/* eslint-enable */
 </script>
 <style lang="scss" scoped>
 </style>
