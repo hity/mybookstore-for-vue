@@ -1,3 +1,5 @@
+@import 'src/assets/styles/var.scss';
+
 body,
 div,
 a,
@@ -120,4 +122,17 @@ input {
 
 .clearfix {
     display: block;
+}
+
+/**  mint-ui reset   ***/
+.mint-searchbar {
+    background: none;
+}
+
+i.mintui-search {
+    font-size: $font-size-lg;
+}
+
+input {
+    font-size: $font-size-base;
 }

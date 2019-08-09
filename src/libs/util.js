@@ -64,3 +64,28 @@ function handleHeader(headerOptions) {
     }
     return headers;
 }
+
+export const formatDate = (date, fmt = 'YYYY年MM月DD日') => {
+    date = new Date(date);
+    let o = {
+        'Y+': date.getFullYear(),
+        'M+': date.getMonth(),
+        'D+': date.getDate(),
+        'h+': date.getHours(),
+        'm+': date.getMinutes(),
+        's+': date.getSeconds()
+    };
+
+    // 遍历这个对象
+    for (let k in o) {
+        if (new RegExp(`(${k})`).test(fmt)) {
+            let str = String(o[k]);
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
+        }
+    }
+    return fmt;
+};
+
+function padLeftZero(str) {
+    return ('00' + str).substr(str.length);
+}

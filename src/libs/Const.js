@@ -6,7 +6,7 @@ export const READ_STATUS = {
     toRead: '未读',
 };
 
-export const STORE_STATUS = {
+export const STOCK_STATUS = {
     in: '在库',
     borrowed: '借出',
     toBuy: '待购',
