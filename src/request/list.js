@@ -6,3 +6,10 @@ export const requestBookList = (params) => {
         params,
     });
 };
+
+export const requestTagList = (params) => {
+    return promiseRequest({
+        url: '/api/tag/list',
+        params,
+    });
+};
