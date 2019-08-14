@@ -298,10 +298,11 @@ export default {
             let endX = event.changedTouches[0].pageX;
             let moveTime = new Date().getTime() - startTime;
             el.style.transition = 'left 0.5s ease 0s';
+
             // 超出时间阈值，为快速滑动
             if (moveTime < criticalTime) {
                 // 向左
-                if ((endX - startX) <= 0) {
+                if ((endX - startX) < 0) {
                     el.style.left = (oprWidth * -1) + 'px';
                 } else {
                     el.style.left = '0px';
@@ -309,7 +310,7 @@ export default {
             } else {
                 let leftMoveX = endX - startX + startLeft;
                 // 缓动，按照 1/2区域原则 舍入
-                if ((oprWidth * -0.5) <= leftMoveX && leftMoveX <= 0) {
+                if ((oprWidth * -0.5) <= leftMoveX && leftMoveX < 0) {
                     el.style.left = '0px';
                 } else if ((oprWidth * -0.5) > leftMoveX && leftMoveX > (oprWidth * -1)) {
                     el.style.left = (oprWidth * -1) + 'px';
@@ -399,11 +400,11 @@ export default {
                 background-position: center center;
             }
             .book-info-wp {
-                width: px2rem(480);
+                width: px2rem(600);
                 .book-info {
                     display: flex;
                     .book-abstract {
-                        width: px2rem(320);
+                        width: px2rem(440);
                         .book-name {
                             font-size: $font-size-base;
                             line-height: 120%;
