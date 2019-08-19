@@ -5,22 +5,16 @@
  * @description: 藏书路由
  */
 
-const List = () => import(/* webpackChunkName: 'assets' */ 'module/list/index');
+const List = () => import(/* webpackChunkName: 'list' */ 'module/list/index');
 
-const Detail = () => import(/* webpackChunkName: 'labelList' */ 'module/list/detail');
+const Detail = () => import(/* webpackChunkName: 'detail' */ 'module/list/detail');
 
 export default [{
-    path: '/store',
-    name: 'store',
+    path: '/store/list',
     component: List,
-    redirect: { name: 'store.list' },
-    children: [{
-        path: 'list',
-        component: List,
-        name: 'store.list',
-    }, {
-        path: 'detail/:bookId',
-        component: Detail,
-        name: 'store.detail',
-    }]
+    name: 'store.list',
+}, {
+    path: '/store/detail/:bookId',
+    component: Detail,
+    name: 'store.detail',
 }];

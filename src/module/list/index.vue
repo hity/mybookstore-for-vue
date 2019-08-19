@@ -1,5 +1,5 @@
 <template>
-    <div class="m-wrapper">
+    <div class="g-bd-wrapper">
         <div class="book-hd">
             <div class="opr-handle">
                 <div class="search-wp">
@@ -83,8 +83,8 @@
             </mt-datetime-picker>
         </div>
         <div class="book-list" >
-            <div class="book-item" v-for="book in bookList" :key="book.id" @touchmove.prevent="onTouchMove" @touchstart.prevent="onTouchStart" @touchend.prevent="onTouchEnd">
-                <div class="book-item-base">
+            <div class="book-item" v-for="book in bookList" :key="book.id" @touchmove.stop.prevent="onTouchMove" @touchstart.stop="onTouchStart" @touchend.stop="onTouchEnd">
+                <div class="book-item-base" @click="goDetail(book.id)">
                     <div class="book-logo-wp" :style="{backgroundImage: 'url('+ book.logo +')'}"></div>
                     <div class="book-info-wp">
                         <p class="book-name">{{book.title}}</p>
@@ -102,11 +102,11 @@
                 </div>
                 <div class="book-item-opr">
                     <div class="book-item-opr-wp">
-                        <div class="txt-btn" v-if="book.stockStatus === 'toBuy'">加入购书单</div>
-                        <div class="txt-btn" v-if="book.stockStatus === 'borrowed'">归还</div>
-                        <div class="txt-btn" v-if="book.stockStatus === 'in'">借出</div>
-                        <div class="txt-btn" v-if="book.readStatus === 'toRead'">加入读书单</div>
-                        <div class="txt-btn" v-if="book.readStatus !== 'done'">完成阅读</div>
+                        <div class="txt-btn" v-if="book.stockStatus === '待购'">欲购</div>
+                        <div class="txt-btn" v-if="book.stockStatus === '借出'">归还</div>
+                        <div class="txt-btn" v-if="book.stockStatus === '在库'">借出</div>
+                        <div class="txt-btn" v-if="book.readStatus === '未读'">想读</div>
+                        <div class="txt-btn" v-if="book.readStatus !== '已读'">读完</div>
                         <div class="txt-btn">删除</div>
                     </div>
                 </div>
@@ -316,6 +316,14 @@ export default {
                     el.style.left = (oprWidth * -1) + 'px';
                 }
             }
+        },
+        goDetail(bookId) {
+            this.$router.push({
+                name: 'store.detail',
+                params: {
+                    bookId,
+                }
+            });
         }
     }
 };
@@ -323,10 +331,14 @@ export default {
 <style lang="scss" scoped>
 @import 'src/assets/styles/style.scss';
 .book-hd {
+    position: absolute;
+    z-index: 10;
+    background-color: #fff;
+    width: 100%;
     font-size: $font-size-base;
     line-height: px2rem(88);
     padding: px2rem(20);
-    border-bottom: 1px solid #efefed;
+    box-shadow: 0px px2rem(2) px2rem(10) $shadow-color;
     .opr-handle {
         height: px2rem(88);
         overflow: hidden;
@@ -381,7 +393,8 @@ export default {
     }
 }
 .book-list {
-  width: 100%;
+    width: 100%;
+    padding-top: px2rem(128);
     .book-item {
         position: relative;
         width: 100%;
