@@ -102,12 +102,13 @@
                 </div>
                 <div class="book-item-opr">
                     <div class="book-item-opr-wp">
-                        <div class="txt-btn" v-if="book.stockStatus === '待购'">欲购</div>
-                        <div class="txt-btn" v-if="book.stockStatus === '借出'">归还</div>
-                        <div class="txt-btn" v-if="book.stockStatus === '在库'">借出</div>
-                        <div class="txt-btn" v-if="book.readStatus === '未读'">想读</div>
-                        <div class="txt-btn" v-if="book.readStatus !== '已读'">读完</div>
-                        <div class="txt-btn">删除</div>
+                        <div class="txt-btn" v-if="book.stockStatus === '待购' && !book.isToBuy" @click="changeStatus(book.id, 'toShop')">欲购</div>
+                        <div class="txt-btn" v-if="book.stockStatus === '借出'" @click="changeStatus(book.id, 'toReturn')">归还</div>
+                        <div class="txt-btn" v-if="book.stockStatus === '在库'" @click="changeStatus(book.id, 'toBorrow')">借出</div>
+                        <div class="txt-btn" v-if="book.readStatus === '未读' && !book.isToRead" @click="changeStatus(book.id, 'toRead')">想读</div>
+                        <div class="txt-btn" v-if="book.readStatus === '未读' && book.isToRead" @click="changeStatus(book.id, 'beginRead')">开读</div>
+                        <div class="txt-btn" v-if="book.readStatus === '进行中'" @click="changeStatus(book.id, 'finishRead')">读完</div>
+                        <div class="txt-btn" @click="delBook(book.id)">删除</div>
                     </div>
                 </div>
             </div>
@@ -115,9 +116,12 @@
     </div>
 </template>
 <script>
-import {requestBookList, requestTagList} from '@/request/list';
+import {requestBookList, delBook} from '@/request/list';
 import {PAGE_SIZE, READ_STATUS, STOCK_STATUS} from '../../libs/Const';
 import {formatDate} from '../../libs/util';
+import oprMixin from './blocks/statusOprMixin';
+import { Toast, MessageBox } from 'mint-ui';
+import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'store.list',
@@ -176,7 +180,16 @@ export default {
             }
         }
     },
+    mixins: [oprMixin],
+    computed: {
+        ...mapState('list', {
+            tagList: state => state.tagList,
+        })
+    },
     methods: {
+        ...mapActions('list', [
+            'getTagList',
+        ]),
         getBookList() {
             let {
                 pageNo,
@@ -204,11 +217,6 @@ export default {
             }, (data) => {
                 console.log('error', data);
             })
-        },
-        getTagList() {
-            requestTagList(null).then(({items, total}) => {
-                this.tagList = items || [];
-            });
         },
         searchBookList() {
             this.reLoadList();
@@ -324,6 +332,18 @@ export default {
                     bookId,
                 }
             });
+        },
+        delBook(id) {
+            delBook({id}).then((data) => {
+                Toast('操作成功');
+                this.removeListInfo(id);
+            }, ({code}) => {
+                Toast('操作失败，请刷新重试');
+            });
+        },
+        removeListInfo(id) {
+            let newList = this.bookList.filter(item => item.id !== id);
+            this.bookList = JSON.parse(JSON.stringify(newList));
         }
     }
 };
@@ -388,7 +408,7 @@ export default {
         width: 100%;
         text-align: left;
         .txt-btn {
-            width: px2rem(250);
+            width: px2rem(230);
         }
     }
 }
@@ -405,11 +425,11 @@ export default {
             padding: px2rem(20);
             width: 100%;
             .book-logo-wp {
-                width: px2rem(90);
-                height: px2rem(90);
+                width: px2rem(120);
+                height: px2rem(120);
                 margin-right: px2rem(20);
                 background-repeat: no-repeat;
-                background-size: 100% auto;
+                background-size: auto 100%;
                 background-position: center center;
             }
             .book-info-wp {

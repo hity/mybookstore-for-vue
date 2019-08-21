@@ -5,88 +5,129 @@
             书本详情
         </div>
         <div class="g-bd-content">
+            <div class="book-name">{{baseInfo.name}}</div>
             <section class="book-base">
-                <div class="book-logo-wp" :style="{backgroundImage: 'url('+ detail.logo +')'}"></div>
                 <div class="book-info">
-                    <div class="book-name">{detail.title}</div>
                     <div class="other-info">
-                        <div class="other-info-desc">{detail.author} / {detail.publisher} / {detail.isbn} / {detail.price} / {detail.lauguage}</div>
-                        <div class="other-info-opr">
-                            <div class="txt-btn" v-if="detail.stockStatus === '待购'">欲购</div>
-                            <div class="txt-btn" v-if="detail.readStatus === '未读'">想读</div>
-                            <div class="txt-btn" v-if="detail.readStatus !== '已读'">读完</div>
+                        <div class="book-item">
+                            <div class="label">作者、译者：</div>
+                            <div class="value">{{baseInfo.author}}</div>
+                        </div>
+                        <div class="book-item">
+                            <div class="label">出版社：</div>
+                            <div class="value">{{baseInfo.publisher}}</div>
+                        </div>
+                        <div class="book-item">
+                            <div class="label">Isbn：</div>
+                            <div class="value">{{baseInfo.isbn}}</div>
+                        </div>
+                        <div class="book-item">
+                            <div class="label">原价：</div>
+                            <div class="value">{{baseInfo.price}}</div>
+                        </div>
+                        <div class="book-item">
+                            <div class="label">语言：</div>
+                            <div class="value">{{baseInfo.lauguage}}</div>
                         </div>
                     </div>
+                    <div class="other-info-opr">
+                        <div class="txt-btn" v-if="stockInfo.stockStatus === '待购' && !stockInfo.isToBuy" @click="changeStatus(baseInfo.id, 'toShop')">欲购</div>
+                        <div class="txt-btn" v-if="stockInfo.stockStatus === '借出'" @click="changeStatus(baseInfo.id, 'toReturn')">归还</div>
+                        <div class="txt-btn" v-if="stockInfo.stockStatus === '在库'" @click="changeStatus(baseInfo.id, 'toBorrow')">借出</div>
+                        <div class="txt-btn" v-if="stockInfo.readStatus === '未读' && !readInfo.isToRead" @click="changeStatus(baseInfo.id, 'toRead')">想读</div>
+                        <div class="txt-btn" v-if="stockInfo.readStatus === '未读' && readInfo.isToRead" @click="changeStatus(baseInfo.id, 'beginRead')">开读</div>
+                        <div class="txt-btn" v-if="stockInfo.readStatus === '进行中'" @click="changeStatus(baseInfo.id, 'finishRead')">读完</div>
+                        <div class="txt-btn" @click="edit">编辑</div>
+                    </div>
                 </div>
+                <div class="book-logo-wp" :style="{backgroundImage: 'url('+ baseInfo.logo +')'}"></div>
             </section>
             <section class="book-individual">
                 <div class="block-title">个性化信息</div>
                 <div class="book-item">
-                    <div class="label">标签</div>
-                    <div class="value">{detail.tags}</div>
+                    <div class="label">标签：</div>
+                    <div class="value">{{baseInfo.tags && baseInfo.tags.length ? baseInfo.tags.join(',') : '--'}}</div>
                 </div>
                 <div class="book-item">
-                    <div class="label">库存状态</div>
-                    <div class="value">{detail.stockStatus}</div>
+                    <div class="label">库存状态：</div>
+                    <div class="value">{{stockInfo.stockStatus || '--'}}</div>
                 </div>
-                <section v-if="detail.stockStatus === '在库'" class="supplement-block">
+                <section v-if="stockInfo.stockStatus === '在库'" class="supplement-block">
                     <div class="book-item">
-                        <div class="label">购买价格</div>
-                        <div class="value">{detail.boughtPrice}</div>
+                        <div class="label">购买价格：</div>
+                        <div class="value">{{stockInfo.boughtPrice || '--'}}元</div>
                     </div>
                     <div class="book-item">
-                        <div class="label">购买时间</div>
-                        <div class="value">{detail.boughtTime}</div>
+                        <div class="label">购买时间：</div>
+                        <div class="value">{{stockInfo.boughtTime ? formatDate(stockInfo.boughtTime) : '--'}}</div>
                     </div>
                     <div class="book-item">
-                        <div class="label">位置信息</div>
-                        <div class="value">{detail.pos}</div>
-                    </div>
-                </section>
-                <section v-if="detail.stockStatus === '借出'" class="supplement-block">
-                    <div class="book-item">
-                        <div class="label">借阅人</div>
-                        <div class="value">{detail.borrower}</div>
-                    </div>
-                    <div class="book-item">
-                        <div class="label">借阅时间</div>
-                        <div class="value">{detail.borrowTime}</div>
+                        <div class="label">位置信息：</div>
+                        <div class="value">{{stockInfo.pos || '--'}}</div>
                     </div>
                 </section>
-                <div class="book-item">
-                    <div class="label">阅读状态</div>
-                    <div class="value">{detail.readStatus}</div>
-                </div>
-                <section v-if="detail.readStatus === 'done'" class="supplement-block">
+                <section v-if="stockInfo.stockStatus === '借出'" class="supplement-block">
                     <div class="book-item">
-                        <div class="label">开始阅读时间</div>
-                        <div class="value">{detail.beginReadTime}</div>
+                        <div class="label">借阅人：</div>
+                        <div class="value">{{stockInfo.borrower || '--'}}</div>
                     </div>
                     <div class="book-item">
-                        <div class="label">完成阅读时间</div>
-                        <div class="value">{detail.endReadTime}</div>
-                    </div>
-                </section>
-                <section v-if="detail.readStatus === 'ing'" class="supplement-block">
-                    <div class="book-item">
-                        <div class="label">开始阅读时间</div>
-                        <div class="value">{detail.beginReadTime}</div>
+                        <div class="label">借阅时间：</div>
+                        <div class="value">{{stockInfo.borrowedTime ? formatDate(stockInfo.borrowedTime) : '--'}}</div>
                     </div>
                 </section>
                 <div class="book-item">
-                    <div class="label">备注</div>
-                    <div class="value">{detail.remark}</div>
+                    <div class="label">阅读状态：</div>
+                    <div class="value">{{readInfo.readStatus || '--'}}</div>
+                </div>
+                <section v-if="readInfo.readStatus === '已读'" class="supplement-block">
+                    <div class="book-item">
+                        <div class="label">完成阅读时间：</div>
+                        <div class="value">{{readInfo.endReadTime ? formatDate(readInfo.endReadTime) : '--'}}</div>
+                    </div>
+                </section>
+                <div class="book-item">
+                    <div class="label">备注：</div>
+                    <div class="value">{{baseInfo.remark || '--'}}</div>
                 </div>
             </section>
         </div>
     </div>
 </template>
 <script>
+import {requestBookDetail} from '@/request/list';
+import oprMixin from './blocks/statusOprMixin';
+import {formatDate} from '../../libs/util';
+
 export default {
     name: 'store.detail',
     data() {
         return {
-            detail: {}
+            baseInfo: {},
+            readInfo: {},
+            stockInfo: {},
+            formatDate,
+        }
+    },
+    created() {
+        this.getBookDetail();
+    },
+    mixins: [oprMixin],
+    methods: {
+        getBookDetail() {
+            requestBookDetail({id: this.$route.params.bookId}).then(({baseInfo, readInfo, stockInfo}) => {
+                this.baseInfo = baseInfo;
+                this.readInfo = readInfo;
+                this.stockInfo = stockInfo;
+            });
+        },
+        edit() {
+            this.$router.push({
+                name: 'store.add',
+                params: {
+                    bookId: this.$route.params.bookId,
+                }
+            });
         }
     }
 };
@@ -109,21 +150,25 @@ export default {
 .g-bd-content {
     padding: px2rem(20);
     height: calc(100% - #{px2rem(200)});
+    font-size: $font-size-base;
+    .book-name {
+        font-size: $font-size-lg;
+        font-weight: bold;
+        line-height: 200%;
+    }
     .book-base {
         display: flex;
+        justify-content: space-between;
         .book-logo-wp {
-            width: px2rem(200);
-            height: px2rem(300);
+            width: px2rem(240);
+            height: px2rem(240);
             background-repeat: no-repeat;
             background-position: center center;
-            background-size: 100% auto;
+            background-size: auto 100%;
             border-radius: px2rem(4);
-            margin-right: px2rem(20);
         }
-        .book-name {
-            font-size: $font-size-lg;
-            font-weight: bold;
-            line-height: 200%;
+        .book-info {
+            width: px2rem(470);
         }
         .other-info-desc {
             font-size: $font-size-sm;
@@ -131,28 +176,39 @@ export default {
         }
         .other-info-opr {
             display: flex;
+            margin-top: px2rem(10);
+            justify-content: center;
             .txt-btn {
                 border-radius: px2rem(4);
                 background: #fff;
+                border: 1px solid $theme-color;
+                padding: px2rem(5) px2rem(20);
+                margin-right: px2rem(10);
+                color: $theme-color;
             }
         }
     }
     .book-individual {
-        margin-top: px2rem(20);
+        margin-top: px2rem(40);
         .block-title {
             font-size: $font-size-lg;
             line-height: 200%;
         }
-        .book-item {
-            display: flex;
-            .book-label {
-                width: px2rem(120);
-                text-align: right;
-                padding-right: px2rem(10);
-            }
-        }
         .supplement-block {
-            margin-left: px2rem(20);
+            margin: px2rem(20) px2rem(20) px2rem(20) px2rem(40);
+            padding: px2rem(10) 0;
+            border-radius: px2rem(10);
+            background: rgba(189, 153, 184, 0.2);
+        }
+    }
+    .book-item {
+        display: flex;
+        line-height: 200%;
+        .label {
+            width: px2rem(220);
+            text-align: right;
+            padding-right: px2rem(10);
+            color: $theme-color;
         }
     }
 }

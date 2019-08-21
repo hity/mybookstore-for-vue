@@ -136,3 +136,81 @@ i.mintui-search {
 input {
     font-size: $font-size-base;
 }
+
+.extend-field {
+    .mint-field-core {
+        display: none;
+    }
+    .mint-checklist-title {
+        display: none;
+    }
+} 
+
+.mint-radiolist .mint-cell-wrapper {
+    background-image: none;
+}
+
+.mint-field .mint-cell-title {
+    width: px2rem(210);
+    text-align: right;
+}
+
+.mint-cell-wrapper {
+    font-size: $font-size-base;
+    padding: 0;
+
+}
+
+.mint-radiolist .mint-cell-title, .mint-checklist .mint-cell-title{
+    width: 100%;
+    text-align: left;
+}
+
+.mint-radiolist a {
+    color: $text-3;
+}
+
+.mint-cell-wrapper, .mint-cell {
+    background-image: none!important;
+    background-color: transparent;
+}
+
+.mint-field-core {
+    background-color: transparent;
+}
+
+.mint-badge.is-primary {
+    border: $theme-color 1px solid;
+    background-color: #fff;
+    line-height: 140%;
+    color: $text-3;
+    margin: px2rem(5) 0;
+}
+
+.mint-cell-value .mint-radiolist {
+    display: flex;
+    .mint-radiolist-title {
+        display: none;
+    }
+    .mint-radiolist-label {
+        padding-right: px2rem(20);
+        .mint-radio-label {
+            margin: 0;
+        }
+    }
+}
+
+.mint-popup {
+    .mint-checklist-title, .mint-radiolist-title {
+        font-size: $font-size-lg;
+        color: $text-3;
+        text-align: center;
+    }
+}
+
+.mint-cell-value textarea {
+    border: px2rem(1) solid $theme-color;
+    padding: px2rem(20);
+    border-radius: px2rem(5);
+    margin: px2rem(20) px2rem(20) px2rem(20) 0;
+}

@@ -13,3 +13,33 @@ export const requestTagList = (params) => {
         params,
     });
 };
+
+export const changeBookStatus = (data) => {
+    return promiseRequest({
+        url: '/api/book',
+        method: 'PATCH',
+        data,
+    });
+};
+
+export const delBook = (params) => {
+    return promiseRequest({
+        url: '/api/book',
+        method: 'DELETE',
+        params,
+    });
+};
+
+export const requestBookDetail = (params) => {
+    return promiseRequest({
+        url: '/api/book',
+        params,
+    });
+};
+
+export const requestPosList = (params) => {
+    return promiseRequest({
+        url: '/api/pos/list',
+        params,
+    });
+};

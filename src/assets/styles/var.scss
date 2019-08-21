@@ -32,11 +32,11 @@ $background-color-light : $text-e;
 $background-color-base  : $text-d;
 
 // 基础，正文
-$font-size-base         : px2rem(28);
+$font-size-base         : px2rem(30);
 // 大，大标题
-$font-size-lg           : px2rem(32);
+$font-size-lg           : px2rem(34);
 // 小，正文/小标题/辅助文字
-$font-size-sm           : px2rem(24);
+$font-size-sm           : px2rem(26);
 
 
 @mixin nLineLimit($n) {

@@ -65,11 +65,11 @@ function handleHeader(headerOptions) {
     return headers;
 }
 
-export const formatDate = (date, fmt = 'YYYY年MM月DD日') => {
+export const formatDate = (date, fmt = 'YYYY/MM/DD') => {
     date = new Date(date);
     let o = {
         'Y+': date.getFullYear(),
-        'M+': date.getMonth(),
+        'M+': date.getMonth() + 1,
         'D+': date.getDate(),
         'h+': date.getHours(),
         'm+': date.getMinutes(),
@@ -80,7 +80,7 @@ export const formatDate = (date, fmt = 'YYYY年MM月DD日') => {
     for (let k in o) {
         if (new RegExp(`(${k})`).test(fmt)) {
             let str = String(o[k]);
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1 || RegExp.$1.length === 4) ? str : padLeftZero(str));
         }
     }
     return fmt;
