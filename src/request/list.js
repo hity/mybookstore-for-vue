@@ -43,3 +43,19 @@ export const requestPosList = (params) => {
         params,
     });
 };
+
+export const addBook = (data) => {
+    return promiseRequest({
+        url: '/api/book',
+        method: 'POST',
+        data,
+    });
+};
+
+export const editBook = (data) => {
+    return promiseRequest({
+        url: '/api/book',
+        method: 'PUT',
+        data,
+    });
+};

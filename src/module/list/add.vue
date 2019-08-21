@@ -7,12 +7,13 @@
         <div class="g-bd-content">
             <section class="book-base">
                 <div class="block-title">基础信息</div>
-                <mt-field label="书名：" placeholder="请输入书名" v-model="baseInfo.name"></mt-field>
+                <mt-field label="书名：" :state="valid.name" placeholder="请输入书名" v-model="baseInfo.name" @click.native="clearValid('name')"></mt-field>
                 <mt-field label="作者、译者：" placeholder="请输入用户名" v-model="baseInfo.author"></mt-field>
                 <mt-field label="出版社：" placeholder="请输入出版社" v-model="baseInfo.publisher"></mt-field>
                 <mt-field label="Isbn：" placeholder="请输入Isbn" v-model="baseInfo.isbn"></mt-field>
                 <mt-field type="number" label="原价：" placeholder="请输入原价" v-model="baseInfo.price">元</mt-field>
                 <mt-field label="语言：" placeholder="请输入语言" v-model="baseInfo.lauguage"></mt-field>
+                <mt-field label="装帧：" placeholder="请输入装帧" v-model="baseInfo.design"></mt-field>
             </section>
             <section class="book-individual">
                 <div class="block-title">个性化信息</div>
@@ -42,7 +43,7 @@
                             <i class="icon iconfont iconqingkong2 i-btn" @click="clearFilter('boughtTime')" ></i>
                         </span>
                     </mt-field>
-                    <mt-field label="库存位置：" class="extend-field">
+                    <mt-field label="藏书位置：" class="extend-field">
                         <template v-if="stockInfo.pos">
                             <mt-badge size="small">{{stockInfo.pos}}</mt-badge>
                             <i class="icon iconfont iconbianji i-btn" @click="changeBadge('pos')" ></i>
@@ -126,7 +127,7 @@
                 position="bottom">
                 <mt-radio 
                     v-if="activeBadgeType === 'pos'"
-                    title="请选择书架位置"
+                    title="请选择藏书位置"
                     v-model="stockInfo.pos"
                     :options="finalPosList">
                 </mt-radio>
@@ -143,13 +144,13 @@
             </mt-popup>
             <div class="book-opr">
                 <mt-button type="default">取消</mt-button>
-                <mt-button type="primary">提交</mt-button>
+                <mt-button type="primary" @click="submit">提交</mt-button>
             </div>
         </div>
     </div>
 </template>
 <script>
-import {requestBookDetail} from '@/request/list';
+import {requestBookDetail, addBook, editBook} from '@/request/list';
 import {formatDate} from '../../libs/util';
 import { Toast, MessageBox } from 'mint-ui';
 import { mapActions, mapState } from 'vuex'
@@ -177,6 +178,7 @@ export default {
             newTags: [],
             newPos: [],
             popupVisible: false,
+            valid: {}, // success, error, warning
         }
     },
     created() {
@@ -219,13 +221,6 @@ export default {
             this.isToBuy = isToBuy ? ['加入'] : [];
             this.isToRead = isToRead ? ['加入'] : [];
         },
-        // tag可增加多个
-        addTag() {
-
-        },
-        delTag(tag) {
-
-        },
         tapDatePicker(type) {
             this.activeDateType = type;
 
@@ -244,9 +239,80 @@ export default {
             this.popupVisible = true;
         },
         addBadgeField() {
-            MessageBox.prompt('请输入' + this.activeBadgeType === 'pos' ? '书本位置' : '标签').then(({ value, action }) => {
+            MessageBox.prompt('请输入' + this.activeBadgeType === 'pos' ? '藏书位置' : '标签').then(({ value, action }) => {
                 value && (this.activeBadgeType === 'pos' ? this.newPos.push(value) : this.newTags.push(value));
             }, () => {});
+        },
+        submit() {
+            let bookId = this.$route.params.bookId;
+            let submitFun = bookId ? editBook : addBook;
+
+            if (!this.baseInfo.name || !this.baseInfo.name.trim()) {
+                this.valid = Object.assign({}, this.valid, {
+                    name: 'error'
+                });
+                Toast('书名不能为空！')
+                return;
+            }
+
+            //  组装阅读相关信息
+            let readInfo = {};
+            switch (this.readInfo.readStatus) {
+                case '已读':
+                    readInfo = {
+                        endReadTime: this.endReadTime
+                    };
+                    break;
+                case '进行中':
+                    break;
+                case '未读':
+                    readInfo = {
+                        isToRead: this.isToRead[0] === '加入',
+                        expectedReadTime: [this.expectedReadTimeMin, this.expectedReadTimeMax]
+                    };
+                    break;
+            }
+            readInfo.readStatus = this.readInfo.readStatus;
+
+            //  组装库存相关信息
+            let stockInfo = {};
+            switch (this.stockInfo.stockStatus) {
+                case '在库':
+                    stockInfo = {
+                        boughtPrice: this.stockInfo.boughtPrice,
+                        boughtTime: this.boughtTime,
+                        pos: this.stockInfo.pos,
+                    };
+                    break;
+                case '借出':
+                    stockInfo = {
+                        borrower: this.stockInfo.borrower,
+                        borrowedTime: this.borrowedTime,
+                    };
+                    break;
+                case '待购':
+                    stockInfo = {
+                        isToBuy: this.isToBuy[0] === '加入',
+                        buyRemark: this.stockInfo.buyRemark,
+                    };
+                    break;
+            }
+            stockInfo.stockStatus = this.stockInfo.stockStatus;
+
+            submitFun({
+                baseInfo: this.baseInfo,
+                readInfo,
+                stockInfo,
+            }).then(() => {
+                Toast(bookId ? '修改成功！' : '添加成功！')
+            })
+        },
+        clearValid(name) {
+            console.log('here');
+            this.valid = Object.assign({}, this.valid, {
+                [name]: undefined
+            });
+            console.log('valid', this.valid);
         }
     }
 };
