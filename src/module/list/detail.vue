@@ -1,7 +1,7 @@
 <template>
     <div class="g-bd-wrapper">
         <div class="g-bd-hd">
-            <i class="icon iconfont iconxiangzuo"></i>
+            <i class="icon iconfont iconxiangzuo" @click="$router.go(-1)"></i>
             书本详情
         </div>
         <div class="g-bd-content">

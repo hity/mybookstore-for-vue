@@ -1,7 +1,7 @@
 <template>
     <div class="g-bd-wrapper">
         <div class="g-bd-hd">
-            <i class="icon iconfont iconxiangzuo"></i>
+            <i class="icon iconfont iconxiangzuo" @click="$router.go(-1)"></i>
             {{$route.params.bookId ? '编辑' : '添加'}}书本
         </div>
         <div class="g-bd-content">
@@ -10,7 +10,7 @@
                 <mt-field label="书名：" :state="valid.name" placeholder="请输入书名" v-model="baseInfo.name" @click.native="clearValid('name')"></mt-field>
                 <mt-field label="作者、译者：" placeholder="请输入用户名" v-model="baseInfo.author"></mt-field>
                 <mt-field label="出版社：" placeholder="请输入出版社" v-model="baseInfo.publisher"></mt-field>
-                <mt-field label="Isbn：" placeholder="请输入Isbn" v-model="baseInfo.isbn"></mt-field>
+                <mt-field label="Isbn：" :state="valid.isbn" placeholder="请输入ISBN" v-model="baseInfo.isbn" @click.native="clearValid('isbn')"></mt-field>
                 <mt-field type="number" label="原价：" placeholder="请输入原价" v-model="baseInfo.price">元</mt-field>
                 <mt-field label="语言：" placeholder="请输入语言" v-model="baseInfo.lauguage"></mt-field>
                 <mt-field label="装帧：" placeholder="请输入装帧" v-model="baseInfo.design"></mt-field>
@@ -143,7 +143,7 @@
                 
             </mt-popup>
             <div class="book-opr">
-                <mt-button type="default">取消</mt-button>
+                <mt-button type="default" @click="$router.go(-1)">取消</mt-button>
                 <mt-button type="primary" @click="submit">提交</mt-button>
             </div>
         </div>
@@ -251,10 +251,31 @@ export default {
                 this.valid = Object.assign({}, this.valid, {
                     name: 'error'
                 });
-                Toast('书名不能为空！')
+                Toast('书名不能为空！');
                 return;
             }
-
+            submitFun({
+                baseInfo: this.baseInfo,
+                readInfo: this.computeReadInfo(),
+                stockInfo: this.computeStockInfo(),
+            }).then(() => {
+                Toast(bookId ? '修改成功！' : '添加成功！');
+                this.$router.go(-1);
+            }, ({code}) => {
+                if (code === 1001) {
+                    this.valid = Object.assign({}, this.valid, {
+                        name: 'error'
+                    });
+                    Toast('书名已存在！')
+                } else if (code === 1002) {
+                    this.valid = Object.assign({}, this.valid, {
+                        isbn: 'error'
+                    });
+                    Toast('ISBN已存在！')
+                }
+            });
+        },
+        computeReadInfo() {
             //  组装阅读相关信息
             let readInfo = {};
             switch (this.readInfo.readStatus) {
@@ -273,7 +294,9 @@ export default {
                     break;
             }
             readInfo.readStatus = this.readInfo.readStatus;
-
+            return readInfo;
+        },
+        computeStockInfo() {
             //  组装库存相关信息
             let stockInfo = {};
             switch (this.stockInfo.stockStatus) {
@@ -298,21 +321,12 @@ export default {
                     break;
             }
             stockInfo.stockStatus = this.stockInfo.stockStatus;
-
-            submitFun({
-                baseInfo: this.baseInfo,
-                readInfo,
-                stockInfo,
-            }).then(() => {
-                Toast(bookId ? '修改成功！' : '添加成功！')
-            })
+            return stockInfo;
         },
         clearValid(name) {
-            console.log('here');
             this.valid = Object.assign({}, this.valid, {
                 [name]: undefined
             });
-            console.log('valid', this.valid);
         }
     }
 };

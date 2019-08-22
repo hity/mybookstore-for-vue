@@ -157,7 +157,6 @@ export default {
             formatDate,
             startDate: new Date(0),
             endDate: new Date(),
-            tagList: [],
             moveBlock: {
                 startX: undefined,
                 startTime: undefined,

@@ -42,7 +42,7 @@ export function promiseRequest(options) {
                 if (response.data.code === 200) {
                     resolve(response.data.data);
                 } else {
-                    reject(response);
+                    reject(response.data);
                 }
             }
         }).catch(function(e) {
