@@ -14,12 +14,21 @@ export default [{
     path: '/store/list',
     component: List,
     name: 'store.list',
+    meta: {
+        fMenu: 'store'
+    }
 }, {
     path: '/store/detail/:bookId',
     component: Detail,
     name: 'store.detail',
+    meta: {
+        fMenu: 'store'
+    }
 }, {
-    path: '/store/add/:bookId',
+    path: '/store/edit/:bookId',
     component: Add,
-    name: 'store.add',
+    name: 'store.edit',
+    meta: {
+        fMenu: 'store'
+    }
 }];

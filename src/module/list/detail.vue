@@ -123,7 +123,7 @@ export default {
         },
         edit() {
             this.$router.push({
-                name: 'store.add',
+                name: 'store.edit',
                 params: {
                     bookId: this.$route.params.bookId,
                 }

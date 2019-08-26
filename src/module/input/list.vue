@@ -87,7 +87,7 @@
                 <div class="book-item-base" @click="goDetail(book.id)">
                     <div class="book-logo-wp" :style="{backgroundImage: 'url('+ book.logo +')'}"></div>
                     <div class="book-info-wp">
-                        <p class="book-name">{{book.name}}</p>
+                        <p class="book-name">{{book.title}}</p>
                         <div class="book-info">
                             <div class="book-abstract">
                                 <p class="book-other">作者：{{book.author}}</p>

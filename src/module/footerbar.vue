@@ -6,15 +6,15 @@
 <template>
     <div class="g-footer">
         <div class="toolbar">
-            <router-link to="/store/list">
+            <router-link to="/store/list" :class="$route.meta.fMenu === 'store' ? 'active' : ''">
                 <i class="icon iconfont iconbook"></i><br/>
                 藏书
             </router-link>
-            <router-link to="/store/detail/12">
+            <router-link to="/input/index" :class="$route.meta.fMenu === 'input' ? 'active' : ''">
                 <i class="icon iconfont icondengji"></i><br/>
                 录入
             </router-link>
-            <router-link to="/store/detail/13">
+            <router-link to="/store/detail/13" :class="$route.meta.fMenu === 'plan' ? 'active' : ''">
                 <i class="icon iconfont iconwj-jh"></i><br/>
                 计划
             </router-link>

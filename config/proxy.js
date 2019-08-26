@@ -3,6 +3,7 @@ module.exports = {
     proxyAllUrl: '', // 如果不为空，那么所有的请求都将代理到这个url
     // RAP服务接口
     proxyTable: {
+        '/api/*/*/*': MOCK_SERVICE,
         '/api/*/*': MOCK_SERVICE,
         '/api/*': MOCK_SERVICE,
     },

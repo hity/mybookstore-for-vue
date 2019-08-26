@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-import footerbar from './common_blocks/footerbar.vue';
+import footerbar from './footerbar.vue';
 
 export default {
     name: 'pageApp',

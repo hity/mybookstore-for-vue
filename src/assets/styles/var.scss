@@ -38,6 +38,7 @@ $font-size-lg           : px2rem(34);
 // 小，正文/小标题/辅助文字
 $font-size-sm           : px2rem(26);
 
+$disabled-color         : #9d9d9d;
 
 @mixin nLineLimit($n) {
     display: box;
