@@ -1,9 +1,6 @@
 <template>
     <div class="g-bd-wrapper">
-        <div class="g-bd-hd">
-            <i class="icon iconfont iconxiangzuo" @click="$router.go(-1)"></i>
-            书本详情
-        </div>
+        <BackHd title="书本详情"></BackHd>
         <div class="g-bd-content">
             <div class="book-name">{{baseInfo.name}}</div>
             <section class="book-base">
@@ -98,6 +95,7 @@
 import {requestBookDetail} from '@/request/list';
 import oprMixin from './blocks/statusOprMixin';
 import {formatDate} from '../../libs/util';
+import BackHd from '../common_blocks/back_hd';
 
 export default {
     name: 'store.detail',
@@ -113,6 +111,9 @@ export default {
         this.getBookDetail();
     },
     mixins: [oprMixin],
+    components: {
+        BackHd
+    },
     methods: {
         getBookDetail() {
             requestBookDetail({id: this.$route.params.bookId}).then(({baseInfo, readInfo, stockInfo}) => {

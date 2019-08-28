@@ -1,24 +1,34 @@
 <template>
-    <div class="g-bd-wrapper">
-        <BackHd :title="($route.params.bookId ? '编辑' : '添加') + '书本'"></BackHd>
-        <div class="g-bd-content">
-            <AddBook></AddBook>
-        </div>
+    <div class="g-bd-hd">
+        <i class="icon iconfont iconxiangzuo" @click="goBack()"></i>
+        {{title}}
     </div>
 </template>
 <script>
-import AddBook from '../common_blocks/add_book';
-import BackHd from '../common_blocks/back_hd';
 
 export default {
-    name: 'store.add',
+    name: 'back-hd',
     data() {
         return {
         }
     },
-    components: {
-        AddBook,
-        BackHd,
+    props: {
+        title: {
+            type: String,
+            require: true
+        },
+        goFunc: {
+            type: Function
+        }
+    },
+    methods: {
+        goBack() {
+            if (this.goFunc) {
+                this.goFunc();
+            } else {
+                this.$router.go(-1);
+            }
+        }
     }
 };
 </script>
@@ -37,9 +47,5 @@ export default {
         float: left;
         font-size: px2rem(50);
     }
-}
-.g-bd-content {
-    padding: px2rem(40) px2rem(20);
-    height: calc(100% - #{px2rem(200)});
 }
 </style>

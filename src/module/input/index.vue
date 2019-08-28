@@ -1,11 +1,8 @@
 <template>
     <div class="g-bd-wrapper">
-        <div class="g-bd-hd">
-            <i class="icon iconfont iconxiangzuo" @click="$router.go(-1)"></i>
-            录入
-        </div>
+        <BackHd :title="title" :goFunc="goFunc"></BackHd>
         <div class="g-bd-content">
-            <div class="opr-list">
+            <div class="opr-list" v-if="process === 'oprList'">
                 <div class="opr-item disabled" @click="inputBook('scan')">
                     <i class="icon iconfont iconsaomiao"></i>
                     <span>扫一扫录入</span>
@@ -25,44 +22,96 @@
                     </div>
                 </div>
             </div>
+            <InputList v-if="process === 'rstList'" @showDetail="showDetail"></InputList>
+            <AddBook v-if="process === 'rstDetail'" :oprType="oprType" :bookId="activeBookId"></AddBook>
         </div>
     </div>
 </template>
 <script>
 import { Toast, MessageBox } from 'mint-ui';
 import { searchBook } from '@/request/list';
+import { mapActions } from 'vuex';
+import InputList from './list';
+import AddBook from '../common_blocks/add_book';
+import BackHd from '../common_blocks/back_hd';
 
 export default {
     name: 'input.index',
     data() {
+        let _this = this;
         return {
             searchValue: undefined,
-            bookList: []
+            process: 'oprList',
+            oprType: 'storeBook',
+            activeBookId: undefined,
+            goFunc: () => {
+                switch (_this.process) {
+                    case 'rstList':
+                        _this.process = 'oprList';
+                        break;
+                    case 'rstDetail':
+                        _this.process = 'rstList';
+                        break;
+                    default:
+                        _this.$router.go(-1);
+                        break;
+                }
+            },
         };
     },
     created() {
     },
+    components: {
+        InputList,
+        AddBook,
+        BackHd,
+    },
+    computed: {
+        title() {
+            switch (this.process) {
+                case 'rstList':
+                    return '结果列表';
+                case 'rstDetail':
+                    return this.activeBookId ? '编辑书本' : '添加书本';
+                default:
+                    return '录入';
+            }
+        }
+    },
     methods: {
+        ...mapActions('input', [
+            'getInputBooks',
+        ]),
         inputBook(type) {
             switch (type) {
                 // 待后续增加微信扫一扫
                 case 'scan':
                     break;
                 case 'hand':
-                    this.$router.push({
-                        name: 'input.add'
-                    });
+                    this.process = 'rstDetail';
+                    this.oprType = 'storeBook';
                     break;
                 case 'search':
-                    searchBook({
+                    this.getInputBooks({
                         searchValue: this.searchValue,
-                    }).then(({items}) => {
-                        this.bookList = items || [];
-                    }, () => {
-                        Toast('请重试！');
+                        success: (total) => {
+                            if (total) {
+                                this.process = 'rstList';
+                            } else {
+                                Toast('无结果，请重新查找！');
+                            }
+                        },
+                        fail: () => {
+                            Toast('请求失败，稍后重试！');
+                        }
                     });
                     break;
             }
+        },
+        showDetail({bookId}) {
+            this.process = 'rstDetail';
+            this.oprType = bookId ? 'storeBook' : 'onlineBook';
+            this.activeBookId = bookId;
         }
     }
 };

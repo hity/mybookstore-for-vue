@@ -59,10 +59,3 @@ export const editBook = (data) => {
         data,
     });
 };
-
-export const searchBook = (params) => {
-    return promiseRequest({
-        url: '/api/book/input/search',
-        params,
-    });
-};
