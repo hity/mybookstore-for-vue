@@ -93,7 +93,7 @@
 </template>
 <script>
 import {requestBookDetail} from '@/request/list';
-import oprMixin from './blocks/statusOprMixin';
+import oprMixin from './blocks/status_opr_mixin';
 import {formatDate} from '../../libs/util';
 import BackHd from '../common_blocks/back_hd';
 

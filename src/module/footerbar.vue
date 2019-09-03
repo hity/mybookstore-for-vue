@@ -14,7 +14,7 @@
                 <i class="icon iconfont icondengji"></i><br/>
                 录入
             </router-link>
-            <router-link to="/store/detail/13" :class="$route.meta.fMenu === 'plan' ? 'active' : ''">
+            <router-link to="/plan/index" :class="$route.meta.fMenu === 'plan' ? 'active' : ''">
                 <i class="icon iconfont iconwj-jh"></i><br/>
                 计划
             </router-link>

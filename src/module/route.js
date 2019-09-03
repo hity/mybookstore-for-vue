@@ -5,8 +5,10 @@
  */
 import listRoute from 'module/list/route';
 import inputRoute from 'module/input/route';
+import planRoute from 'module/plan/route';
 
 export default [
     ...listRoute,
     ...inputRoute,
+    ...planRoute,
 ];

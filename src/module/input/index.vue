@@ -2,7 +2,7 @@
     <div class="g-bd-wrapper">
         <BackHd :title="title" :goFunc="goFunc"></BackHd>
         <div class="g-bd-content">
-            <div class="opr-list" v-if="process === 'oprList'">
+            <div class="opr-list" v-if="process === 'input'">
                 <div class="opr-item disabled" @click="inputBook('scan')">
                     <i class="icon iconfont iconsaomiao"></i>
                     <span>扫一扫录入</span>
@@ -22,8 +22,8 @@
                     </div>
                 </div>
             </div>
-            <InputList v-if="process === 'rstList'" @showDetail="showDetail"></InputList>
-            <AddBook v-if="process === 'rstDetail'" :oprType="oprType" :bookId="activeBookId"></AddBook>
+            <InputList v-if="process === 'list'" @showDetail="showDetail"></InputList>
+            <AddBook v-if="process === 'detail'" :oprType="oprType" :bookId="activeBookId"></AddBook>
         </div>
     </div>
 </template>
@@ -41,16 +41,16 @@ export default {
         let _this = this;
         return {
             searchValue: undefined,
-            process: 'oprList',
+            process: 'input', // input、list、detail
             oprType: 'storeBook',
             activeBookId: undefined,
             goFunc: () => {
                 switch (_this.process) {
-                    case 'rstList':
-                        _this.process = 'oprList';
+                    case 'list':
+                        _this.process = 'input';
                         break;
-                    case 'rstDetail':
-                        _this.process = 'rstList';
+                    case 'detail':
+                        _this.process = 'list';
                         break;
                     default:
                         _this.$router.go(-1);
@@ -69,9 +69,9 @@ export default {
     computed: {
         title() {
             switch (this.process) {
-                case 'rstList':
+                case 'list':
                     return '结果列表';
-                case 'rstDetail':
+                case 'detail':
                     return this.activeBookId ? '编辑书本' : '添加书本';
                 default:
                     return '录入';
@@ -88,7 +88,7 @@ export default {
                 case 'scan':
                     break;
                 case 'hand':
-                    this.process = 'rstDetail';
+                    this.process = 'detail';
                     this.oprType = 'storeBook';
                     break;
                 case 'search':
@@ -96,7 +96,7 @@ export default {
                         searchValue: this.searchValue,
                         success: (total) => {
                             if (total) {
-                                this.process = 'rstList';
+                                this.process = 'list';
                             } else {
                                 Toast('无结果，请重新查找！');
                             }
@@ -109,7 +109,7 @@ export default {
             }
         },
         showDetail({bookId}) {
-            this.process = 'rstDetail';
+            this.process = 'detail';
             this.oprType = bookId ? 'storeBook' : 'onlineBook';
             this.activeBookId = bookId;
         }
