@@ -103,7 +103,7 @@
         "babel-plugin-import": "^1.12.0",
         "better-scroll": "^1.11.1",
         "clipboard": "^1.7.1",
-        "lodash": "^4.17.4",
+        "lodash": "^4.17.21",
         "mint-ui": "^2.2.13",
         "weixin-js-sdk": "^1.3.3"
     }
